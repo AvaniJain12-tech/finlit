@@ -12,12 +12,12 @@ interface ActionPairProps {
 }
 
 /**
- * Two decision buttons with identical size, colour and weight.
- * Neither option is visually favoured — the investor decides.
+ * Two decision buttons with identical size, colour and visual weight.
+ * Neither option is presented as "correct" — the investor decides.
  */
 export function ActionPair({ left, right }: ActionPairProps) {
   return (
-    <div className="flex gap-3">
+    <div className="grid grid-cols-2 gap-2.5">
       {[left, right].map((action) => (
         <Button
           key={action.label}
@@ -25,7 +25,7 @@ export function ActionPair({ left, right }: ActionPairProps) {
           size="pair"
           onClick={action.onClick}
           disabled={action.disabled}
-          className="flex-1"
+          className="w-full"
         >
           {action.label}
         </Button>

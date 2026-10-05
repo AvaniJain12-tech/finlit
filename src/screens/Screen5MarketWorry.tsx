@@ -1,5 +1,4 @@
 import { ScreenShell } from '@/components/ui/ScreenShell';
-import { Card } from '@/components/ui/Card';
 import { ActionPair } from '@/components/ui/ActionPair';
 import { marketScenarios, scenarioMove, formatINR } from '@/lib/data';
 
@@ -19,13 +18,13 @@ export function Screen5MarketWorry({
   const move = formatINR(scenarioMove(amount));
   const pct = marketScenarios.movePct;
 
-  // Both scenarios share one card style: neither outcome is presented as preferable.
   const scenarios = [
     {
-      label: `If the fund falls ${pct}% before you buy back`,
+      label: `If the fund falls ${pct}%`,
       body: (
         <>
-          You avoid about <span className="font-semibold text-slate-900">{move}</span> of decline.
+          You avoid about <span className="font-semibold text-ink-DEFAULT">{move}</span> of
+          decline before you buy back.
         </>
       ),
     },
@@ -34,7 +33,7 @@ export function Screen5MarketWorry({
       body: (
         <>
           Buying back the same units costs about{' '}
-          <span className="font-semibold text-slate-900">{move}</span> more.
+          <span className="font-semibold text-ink-DEFAULT">{move}</span> more.
         </>
       ),
     },
@@ -50,28 +49,32 @@ export function Screen5MarketWorry({
         />
       }
     >
-      <div className="pt-3 animate-fade-in-up">
-        <h1 className="text-headline text-slate-900 mb-2">If the market moves next</h1>
-        <p className="text-sm text-slate-500 mb-6">
+      <div className="pt-5 animate-fade-in-up">
+        <h1 className="text-headline text-ink-DEFAULT mb-2 leading-snug">
+          If the market moves next
+        </h1>
+        <p className="text-[13px] text-ink-tertiary mb-8">
           On the {formatINR(amount)} you're redeeming.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        {/* Two symmetrical scenario blocks — identical in every dimension */}
+        <div className="grid grid-cols-2 gap-3 mb-8">
           {scenarios.map((s) => (
-            <Card key={s.label}>
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 mb-2">
-                {s.label}
-              </p>
-              <p className="text-[15px] text-slate-600 leading-relaxed">{s.body}</p>
-            </Card>
+            <div
+              key={s.label}
+              className="bg-white rounded-xl border border-border-DEFAULT p-4 flex flex-col gap-3"
+            >
+              <p className="eyebrow">{s.label}</p>
+              <p className="text-[13px] text-ink-secondary leading-relaxed">{s.body}</p>
+            </div>
           ))}
         </div>
 
-        <div className="mb-4 space-y-1.5">
-          <p className="text-sm text-slate-600 leading-relaxed">
+        <div className="space-y-1">
+          <p className="text-[13px] text-ink-secondary leading-relaxed">
             We can't predict which happens.
           </p>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-[11px] text-ink-tertiary leading-relaxed">
             These are illustrations, not predictions.
           </p>
         </div>

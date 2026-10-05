@@ -1,5 +1,4 @@
 import { ScreenShell } from '@/components/ui/ScreenShell';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ExpandableSection } from '@/components/ui/ExpandableSection';
 import {
@@ -26,110 +25,88 @@ export function Screen7Explainability({ amount, onBack }: Screen7ExplainabilityP
   const pl = realisedPL(amount);
   const plWord = pl < 0 ? 'loss' : 'gain';
 
+  const listItems = (items: string[]) => (
+    <ul className="space-y-2">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-2.5">
+          <span className="w-1 h-1 rounded-full bg-ink-faint flex-shrink-0 mt-2" />
+          <span className="text-[13px] text-ink-secondary">{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <ScreenShell onBack={onBack}>
-      <div className="pt-3 animate-fade-in-up">
-        <h1 className="text-headline text-slate-900 mb-6">Why am I seeing this?</h1>
-
-        <p className="text-sm text-slate-600 leading-relaxed mb-6">
+      <div className="pt-5 animate-fade-in-up">
+        <h1 className="text-headline text-ink-DEFAULT mb-2 leading-snug">
+          Why am I seeing this?
+        </h1>
+        <p className="text-[13px] text-ink-secondary leading-relaxed mb-8">
           We pull together the data we have about your investment to show what a redemption
-          changes. Here's what goes into it — and what doesn't.
+          changes — and what we don't know.
         </p>
 
-        {/* Data used */}
-        <div className="mb-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
-            Data used
-          </p>
-          <Card padded={false} className="p-4">
-            <ul className="space-y-2.5 text-sm text-slate-600">
-              {[
-                'Fund value',
-                'Units',
-                'Purchase price',
-                'Purchase dates',
-                'Goal value',
-                'Portfolio allocation',
-                'Fund/category performance',
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-2.5">
-                  <span className="w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Card>
+        {/* Three clean sections separated by dividers */}
+        <div className="border-t border-border-DEFAULT">
+
+          <div className="py-5 border-b border-border-DEFAULT">
+            <p className="eyebrow mb-3">Data used</p>
+            {listItems([
+              'Fund value',
+              'Units',
+              'Purchase price',
+              'Purchase dates',
+              'Goal value',
+              'Portfolio allocation',
+              'Fund / category performance',
+            ])}
+          </div>
+
+          <div className="py-5 border-b border-border-DEFAULT">
+            <p className="eyebrow mb-3">Calculations</p>
+            {listItems([
+              'Redemption amount',
+              'Realised P/L',
+              'Goal impact',
+              'Portfolio allocation change',
+            ])}
+          </div>
+
+          <div className="py-5 border-b border-border-DEFAULT">
+            <p className="eyebrow mb-3">Unknowns</p>
+            {listItems(unknowns)}
+          </div>
+
+          {/* How each number was derived — expandable rows */}
+          <div className="py-2">
+            <ExpandableSection title="How was P/L calculated?">
+              Units are sold oldest first (FIFO). The units sold cost {formatINR(cost)} and are
+              redeemed for {formatINR(amount)}, so the realised {plWord} is{' '}
+              {formatINR(Math.abs(pl))} (≈ {formatINR(roundTo(Math.abs(pl), 100))}).
+            </ExpandableSection>
+            <ExpandableSection title="Why this tax estimate?">
+              The units sold are at a loss, so there is no capital-gains tax; they are past the
+              exit-load period, so load is ₹0.
+            </ExpandableSection>
+            <ExpandableSection title="How did the goal number change?">
+              {goal.name} holds {formatLakhs(goal.currentValue)} today; this redemption removes{' '}
+              {formatLakhs(amount)} → {formatLakhs(goalAfter(amount))}. Today's value only — no
+              projected returns.
+            </ExpandableSection>
+            <ExpandableSection title="How did the equity share change?">
+              ({formatLakhs(portfolio.equity)} − {formatLakhs(amount)}) ÷ (
+              {formatLakhs(portfolio.total)} − {formatLakhs(amount)}) ={' '}
+              {formatPct(equitySharePct(amount), 1)}.
+            </ExpandableSection>
+          </div>
         </div>
 
-        {/* Calculations */}
-        <div className="mb-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
-            Calculations
-          </p>
-          <Card padded={false} className="p-4">
-            <ul className="space-y-2.5 text-sm text-slate-600">
-              {[
-                'Redemption amount',
-                'Realised P/L',
-                'Goal impact',
-                'Portfolio allocation change',
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-2.5">
-                  <span className="w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </div>
-
-        {/* Unknowns — same list as the receipt */}
-        <div className="mb-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
-            Unknowns
-          </p>
-          <Card padded={false} className="p-4">
-            <ul className="space-y-2.5 text-sm text-slate-600">
-              {unknowns.map((item) => (
-                <li key={item} className="flex items-center gap-2.5">
-                  <span className="w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </div>
-
-        {/* How each number was calculated */}
-        <Card padded={false} className="p-5 mb-6">
-          <ExpandableSection title="How was P/L calculated?">
-            Units are sold oldest first (FIFO). The units sold cost {formatINR(cost)} and are
-            redeemed for {formatINR(amount)}, so the realised {plWord} is{' '}
-            {formatINR(Math.abs(pl))} (≈ {formatINR(roundTo(Math.abs(pl), 100))}).
-          </ExpandableSection>
-          <ExpandableSection title="Why this tax estimate?">
-            The units sold are at a loss, so there is no capital-gains tax; they are past the
-            exit-load period, so load is ₹0.
-          </ExpandableSection>
-          <ExpandableSection title="How did the goal number change?">
-            {goal.name} holds {formatLakhs(goal.currentValue)} today; this redemption removes{' '}
-            {formatLakhs(amount)} → {formatLakhs(goalAfter(amount))}. Today's value only — no
-            projected returns.
-          </ExpandableSection>
-          <ExpandableSection title="How did the equity share change?">
-            ({formatLakhs(portfolio.equity)} − {formatLakhs(amount)}) ÷ (
-            {formatLakhs(portfolio.total)} − {formatLakhs(amount)}) ={' '}
-            {formatPct(equitySharePct(amount), 1)}.
-          </ExpandableSection>
-        </Card>
-
-        <div className="p-4 rounded-xl bg-slate-100/60 border border-slate-200/60 mb-6">
-          <p className="text-sm text-slate-600 leading-relaxed text-center font-medium">
-            These numbers describe consequences.
-            <br />
-            They are not a recommendation.
-          </p>
-        </div>
+        {/* Neutral disclaimer */}
+        <p className="text-[12px] text-ink-tertiary leading-relaxed text-center my-6 font-medium">
+          These numbers describe consequences.<br />
+          They are not a recommendation.
+        </p>
 
         <Button variant="secondary" onClick={onBack} className="w-full">
           Back

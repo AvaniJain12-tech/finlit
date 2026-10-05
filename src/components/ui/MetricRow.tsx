@@ -9,10 +9,10 @@ export function MetricRow({ label, value, sublabel, valueClassName = '' }: Metri
   return (
     <div className="flex items-baseline justify-between py-2.5">
       <div>
-        <p className="text-sm text-slate-500 font-medium">{label}</p>
-        {sublabel && <p className="text-xs text-slate-400 mt-0.5">{sublabel}</p>}
+        <p className="text-[13px] text-ink-secondary font-medium">{label}</p>
+        {sublabel && <p className="text-xs text-ink-tertiary mt-0.5">{sublabel}</p>}
       </div>
-      <p className={`text-[15px] font-semibold tabular text-slate-900 ${valueClassName}`}>
+      <p className={`text-[15px] font-semibold tabular text-ink-DEFAULT ${valueClassName}`}>
         {value}
       </p>
     </div>

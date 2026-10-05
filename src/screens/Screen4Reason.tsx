@@ -8,7 +8,6 @@ interface Screen4ReasonProps {
   onBack: () => void;
   onWorriedMarkets: () => void;
   onNeedCash: () => void;
-  /** Every other chip, including Skip, returns to the receipt. */
   onOtherContinue: (reason: string) => void;
 }
 
@@ -33,14 +32,16 @@ export function Screen4Reason({
 
   return (
     <ScreenShell onBack={onBack}>
-      <div className="pt-3 animate-fade-in-up">
-        <h1 className="text-headline text-slate-900 mb-2">What's this money for?</h1>
-        <p className="text-sm text-slate-500 leading-relaxed mb-6">
+      <div className="pt-5 animate-fade-in-up">
+        <h1 className="text-headline text-ink-DEFAULT mb-2 leading-snug">
+          What's this money for?
+        </h1>
+        <p className="text-[13px] text-ink-tertiary leading-relaxed mb-8">
           This helps us show the most relevant context. Your choice doesn't change the amount
           you can redeem.
         </p>
 
-        <div className="flex flex-wrap gap-2.5 mb-8">
+        <div className="flex flex-wrap gap-2 mb-10">
           {reasonChips.map((chip) => (
             <Chip
               key={chip}
