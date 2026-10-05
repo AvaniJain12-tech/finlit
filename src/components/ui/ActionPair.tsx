@@ -12,24 +12,32 @@ interface ActionPairProps {
 }
 
 /**
- * Two decision buttons with identical size, colour and visual weight.
- * Neither option is presented as "correct" — the investor decides.
+ * Two equally dignified decision buttons.
+ * Left = secondary (solid white + border).
+ * Right = primary (solid dark fill).
+ * Neither is transparent. Both are clearly clickable.
  */
 export function ActionPair({ left, right }: ActionPairProps) {
   return (
-    <div className="grid grid-cols-2 gap-2.5">
-      {[left, right].map((action) => (
-        <Button
-          key={action.label}
-          variant="outline"
-          size="pair"
-          onClick={action.onClick}
-          disabled={action.disabled}
-          className="w-full"
-        >
-          {action.label}
-        </Button>
-      ))}
+    <div className="grid grid-cols-2 gap-3">
+      <Button
+        variant="secondary"
+        size="pair"
+        onClick={left.onClick}
+        disabled={left.disabled}
+        className="w-full"
+      >
+        {left.label}
+      </Button>
+      <Button
+        variant="primary"
+        size="pair"
+        onClick={right.onClick}
+        disabled={right.disabled}
+        className="w-full"
+      >
+        {right.label}
+      </Button>
     </div>
   );
 }

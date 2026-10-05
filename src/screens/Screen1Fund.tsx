@@ -1,6 +1,5 @@
 import { ScreenShell } from '@/components/ui/ScreenShell';
 import { Button } from '@/components/ui/Button';
-import { MetricRow } from '@/components/ui/MetricRow';
 import { fund, formatINR } from '@/lib/data';
 
 interface Screen1FundProps {
@@ -10,42 +9,53 @@ interface Screen1FundProps {
 export function Screen1Fund({ onRedeem }: Screen1FundProps) {
   return (
     <ScreenShell showHeader brandLabel="FinLit Ventures">
-      <div className="pt-5 animate-fade-in-up">
+      <div className="pt-6 animate-fade-in-up">
 
         {/* Fund identity */}
         <p className="eyebrow mb-2">Your investment</p>
-        <h1 className="text-headline text-ink-DEFAULT mb-6 leading-snug">{fund.name}</h1>
+        <h1 className="text-[22px] font-[700] text-ink leading-snug tracking-tight mb-8">
+          {fund.name}
+        </h1>
 
-        {/* Current value — hero number */}
-        <div className="mb-6">
-          <p className="text-[12px] text-ink-tertiary font-medium mb-1.5 uppercase tracking-wider">Current value</p>
-          <p className="text-display font-bold tabular text-ink-DEFAULT tracking-tight leading-none">
+        {/* Current value — dominant hero */}
+        <div className="mb-8">
+          <p className="text-[12px] text-ink-3 font-medium mb-2 uppercase tracking-widest">
+            Current value
+          </p>
+          <p className="text-display tabular font-[750] text-ink leading-none tracking-tight">
             {formatINR(fund.currentValue)}
           </p>
         </div>
 
-        {/* Hairline divider */}
-        <div className="border-t border-border-DEFAULT mb-5" />
+        {/* Divider */}
+        <div className="h-px bg-border mb-1" />
 
-        {/* Metrics */}
-        <div className="space-y-0 divide-y divide-border-subtle">
-          <MetricRow label="Invested" value={formatINR(fund.invested)} />
-          <MetricRow
-            label="Return"
-            value={`${formatINR(fund.returns)}  ·  ${fund.returnsPct}%`}
-          />
-          <MetricRow label="52-week high" value={formatINR(fund.fiftyTwoWeekHigh)} />
+        {/* Fund metrics — clean rows */}
+        <div className="divide-y divide-border-2">
+          <div className="flex items-baseline justify-between py-3.5">
+            <span className="text-[13px] text-ink-2 font-medium">Invested</span>
+            <span className="text-[15px] font-semibold tabular text-ink">{formatINR(fund.invested)}</span>
+          </div>
+          <div className="flex items-baseline justify-between py-3.5">
+            <span className="text-[13px] text-ink-2 font-medium">Return</span>
+            <span className="text-[15px] font-semibold tabular text-ink">
+              {formatINR(fund.returns)} · {fund.returnsPct}%
+            </span>
+          </div>
+          <div className="flex items-baseline justify-between py-3.5">
+            <span className="text-[13px] text-ink-2 font-medium">52-week high</span>
+            <span className="text-[15px] font-semibold tabular text-ink">{formatINR(fund.fiftyTwoWeekHigh)}</span>
+          </div>
         </div>
 
-        {/* Hairline divider */}
-        <div className="border-t border-border-DEFAULT mt-0 mb-6" />
+        <div className="h-px bg-border mb-6" />
 
         {/* Context note */}
-        <p className="text-[13px] text-ink-tertiary leading-relaxed mb-8">
-          {fund.pctBelowHigh}% below its 52-week high.{' '}
-          Similar funds are {fund.similarFundsPctBelow}% below theirs.
+        <p className="text-[13px] text-ink-3 leading-relaxed mb-10">
+          {fund.pctBelowHigh}% below its 52-week high. Similar funds are {fund.similarFundsPctBelow}% below theirs.
         </p>
 
+        {/* PRIMARY CTA — solid filled, impossible to miss */}
         <Button onClick={onRedeem} className="w-full">
           Redeem
         </Button>

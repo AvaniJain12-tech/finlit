@@ -5,17 +5,15 @@ interface AmountDisplayProps {
 }
 
 const sizes = {
-  sm: 'text-amount-md',
-  md: 'text-amount-md',
-  lg: 'text-amount-lg',
-  xl: 'text-amount-xl',
+  sm: 'text-num-md',
+  md: 'text-num-md',
+  lg: 'text-num-lg',
+  xl: 'text-num-xl',
 };
 
 export function AmountDisplay({ amount, size = 'lg', className = '' }: AmountDisplayProps) {
   return (
-    <p
-      className={`font-bold tabular text-ink-DEFAULT tracking-tight leading-none ${sizes[size]} ${className}`}
-    >
+    <p className={`font-[750] tabular text-ink leading-none tracking-tight ${sizes[size]} ${className}`}>
       {amount}
     </p>
   );

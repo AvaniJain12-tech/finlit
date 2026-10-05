@@ -25,13 +25,13 @@ export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps)
 
         {/* Minimal confirmation mark */}
         <div className="flex flex-col items-center text-center mb-10">
-          <div className="w-12 h-12 rounded-full border-[1.5px] border-ink-DEFAULT flex items-center justify-center mb-5">
+          <div className="w-12 h-12 rounded-full border-[1.5px] border-ink flex items-center justify-center mb-5">
             <svg
               width="18"
               height="14"
               viewBox="0 0 18 14"
               fill="none"
-              className="text-ink-DEFAULT"
+              className="text-ink"
             >
               <path
                 d="M1.5 7L6.5 12L16.5 2"
@@ -42,42 +42,42 @@ export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps)
               />
             </svg>
           </div>
-          <p className="eyebrow mb-3">Redemption submitted</p>
-          <h1 className="text-display font-bold tabular text-ink-DEFAULT tracking-tight leading-none mb-1">
+          <p className="eyebrow mb-2">Redemption confirmed</p>
+          <h1 className="text-display tabular font-[750] text-ink tracking-tight leading-none mb-2">
             {formatINR(amount)}
           </h1>
-          <p className="text-[13px] text-ink-tertiary mt-2">
-            Expected credit {redemption.expectedCredit.toLowerCase()}
+          <p className="text-[13px] text-ink-3">
+            Expected in bank · {redemption.expectedCredit.toLowerCase()}
           </p>
         </div>
 
         {/* Consequence summary — divider rows */}
-        <div className="border-t border-border-DEFAULT mb-8">
-          <div className="py-5 border-b border-border-DEFAULT">
+        <div className="border-t border-border mb-8">
+          <div className="py-5 border-b border-border">
             <p className="eyebrow mb-3">Your goal</p>
-            <p className="text-[13px] font-semibold text-ink-DEFAULT mb-2">{goal.name}</p>
+            <p className="text-[14px] font-semibold text-ink mb-2">{goal.name}</p>
             <div className="flex items-baseline gap-3">
-              <span className="text-amount-md font-bold tabular text-ink-tertiary leading-none">
+              <span className="text-num-md tabular font-[700] text-ink-3 leading-none">
                 {formatLakhs(goal.currentValue)}
               </span>
-              <span className="text-ink-faint text-lg leading-none">→</span>
-              <span className="text-amount-md font-bold tabular text-ink-DEFAULT leading-none">
+              <span className="text-ink-4 text-xl leading-none">→</span>
+              <span className="text-num-md tabular font-[700] text-ink leading-none">
                 {formatLakhs(goalAfter(amount))}
               </span>
             </div>
           </div>
 
-          <div className="py-5 border-b border-border-DEFAULT">
+          <div className="py-5 border-b border-border">
             <p className="eyebrow mb-3">Your mix</p>
-            <p className="text-[13px] text-ink-secondary mb-2">
+            <p className="text-[13px] text-ink-2 mb-2">
               Equity share of your mutual-fund portfolio
             </p>
             <div className="flex items-baseline gap-3">
-              <span className="text-amount-md font-bold tabular text-ink-tertiary leading-none">
+              <span className="text-num-md tabular font-[700] text-ink-3 leading-none">
                 {formatPct(equitySharePct())}
               </span>
-              <span className="text-ink-faint text-lg leading-none">→</span>
-              <span className="text-amount-md font-bold tabular text-ink-DEFAULT leading-none">
+              <span className="text-ink-4 text-xl leading-none">→</span>
+              <span className="text-num-md tabular font-[700] text-ink leading-none">
                 {formatPct(equitySharePct(amount))}
               </span>
             </div>
@@ -86,18 +86,18 @@ export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps)
 
         {/* Comprehension question — lightweight research style */}
         <div className="mb-8">
-          <p className="text-[13px] text-ink-secondary text-center mb-4 leading-relaxed">
+          <p className="text-[13px] text-ink-2 text-center mb-4 leading-relaxed">
             Did this screen help you understand the decision?
           </p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2.5">
             {['Yes', 'Somewhat', 'No'].map((option) => (
               <button
                 key={option}
                 onClick={() => setFeedback(option)}
-                className={`py-3 rounded-lg text-[13px] font-semibold border transition-all duration-200 active:scale-[0.97] ${
+                className={`py-3 rounded-lg text-[13px] font-semibold border transition-all duration-150 active:scale-[0.97] cursor-pointer ${
                   feedback === option
-                    ? 'bg-ink-DEFAULT text-canvas border-ink-DEFAULT'
-                    : 'bg-white text-ink-secondary border-border-DEFAULT hover:border-ink-tertiary'
+                    ? 'bg-ink text-white border-ink shadow-btn'
+                    : 'bg-surface text-ink border-border hover:border-ink-3 hover:bg-border-2'
                 }`}
               >
                 {option}
@@ -106,7 +106,8 @@ export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps)
           </div>
         </div>
 
-        <Button variant="secondary" onClick={onRestart} className="w-full">
+        {/* Start over button — solid secondary */}
+        <Button variant="secondary" onClick={onRestart} className="w-full mb-4">
           Start over
         </Button>
       </div>

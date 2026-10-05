@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
+  *, *::before, *::after {
     -webkit-tap-highlight-color: transparent;
     box-sizing: border-box;
   }
@@ -18,41 +18,39 @@
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #f7f6f3;
-    color: #1a1917;
+    background-color: #F7F6F2;
+    color: #171717;
     font-feature-settings: 'cv11', 'ss01';
   }
 
-  /* Remove number input spinners */
   input[type='number']::-webkit-outer-spin-button,
   input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  input[type='number'] {
-    -moz-appearance: textfield;
-  }
+  input[type='number'] { -moz-appearance: textfield; }
 }
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+  /* Tabular financial numbers */
   .tabular {
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum';
   }
 
-  /* Receipt divider — subtle hairline */
-  .receipt-divider {
-    @apply border-t border-border-DEFAULT my-4;
+  /* Eyebrow label — small caps above sections */
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #A09D96;
   }
 
-  /* Eyebrow label */
-  .eyebrow {
-    @apply text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-tertiary;
-  }
+  /* Section divider */
+  .divider { border-top: 1px solid #E5E2DA; }
+  .divider-subtle { border-top: 1px solid #F0EDE6; }
 }

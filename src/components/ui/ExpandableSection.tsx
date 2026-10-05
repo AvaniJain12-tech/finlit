@@ -10,25 +10,23 @@ export function ExpandableSection({ title, children }: ExpandableSectionProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-border-subtle last:border-b-0">
+    <div className="border-b border-border-2 last:border-b-0">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-3.5 text-left gap-3"
+        className="w-full flex items-center justify-between py-4 text-left gap-4"
       >
-        <span className="text-[13px] font-semibold text-ink-DEFAULT">{title}</span>
+        <span className="text-[14px] font-semibold text-ink">{title}</span>
         <ChevronDown
-          className={`w-4 h-4 text-ink-tertiary flex-shrink-0 transition-transform duration-200 ${
-            open ? 'rotate-180' : ''
-          }`}
+          className={`w-4 h-4 text-ink-3 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
           strokeWidth={2}
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-250 ease-out ${
-          open ? 'max-h-64 pb-4' : 'max-h-0'
+        className={`overflow-hidden transition-all duration-200 ease-out ${
+          open ? 'max-h-72 pb-4' : 'max-h-0'
         }`}
       >
-        <div className="text-[13px] text-ink-secondary leading-relaxed pr-6">{children}</div>
+        <p className="text-[13px] text-ink-2 leading-relaxed pr-6">{children}</p>
       </div>
     </div>
   );

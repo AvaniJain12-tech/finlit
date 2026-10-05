@@ -21,27 +21,22 @@ export function Screen4Reason({
 
   const handleContinue = () => {
     if (!selected) return;
-    if (selected === 'Worried markets will fall') {
-      onWorriedMarkets();
-    } else if (selected === 'Need cash') {
-      onNeedCash();
-    } else {
-      onOtherContinue(selected);
-    }
+    if (selected === 'Worried markets will fall') onWorriedMarkets();
+    else if (selected === 'Need cash') onNeedCash();
+    else onOtherContinue(selected);
   };
 
   return (
     <ScreenShell onBack={onBack}>
-      <div className="pt-5 animate-fade-in-up">
-        <h1 className="text-headline text-ink-DEFAULT mb-2 leading-snug">
+      <div className="pt-6 animate-fade-in-up">
+        <h1 className="text-headline text-ink mb-2 leading-tight">
           What's this money for?
         </h1>
-        <p className="text-[13px] text-ink-tertiary leading-relaxed mb-8">
-          This helps us show the most relevant context. Your choice doesn't change the amount
-          you can redeem.
+        <p className="text-[13px] text-ink-3 leading-relaxed mb-8">
+          Helps us show relevant context. Doesn't change the amount you can redeem.
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex flex-wrap gap-2.5 mb-10">
           {reasonChips.map((chip) => (
             <Chip
               key={chip}

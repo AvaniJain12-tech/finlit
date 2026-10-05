@@ -20,22 +20,14 @@ export function Screen5MarketWorry({
 
   const scenarios = [
     {
-      label: `If the fund falls ${pct}%`,
-      body: (
-        <>
-          You avoid about <span className="font-semibold text-ink-DEFAULT">{move}</span> of
-          decline before you buy back.
-        </>
-      ),
+      label: `Fund falls ${pct}%`,
+      result: `≈ ${formatINR(Math.round(amount * (1 - pct / 100)))}`,
+      note: `You avoid about ${move} of decline — before buying back.`,
     },
     {
-      label: `If the fund rises ${pct}%`,
-      body: (
-        <>
-          Buying back the same units costs about{' '}
-          <span className="font-semibold text-ink-DEFAULT">{move}</span> more.
-        </>
-      ),
+      label: `Fund rises ${pct}%`,
+      result: `≈ ${formatINR(Math.round(amount * (1 + pct / 100)))}`,
+      note: `Buying back the same units costs about ${move} more.`,
     },
   ];
 
@@ -49,33 +41,33 @@ export function Screen5MarketWorry({
         />
       }
     >
-      <div className="pt-5 animate-fade-in-up">
-        <h1 className="text-headline text-ink-DEFAULT mb-2 leading-snug">
-          If the market moves next
+      <div className="pt-6 animate-fade-in-up">
+        <h1 className="text-headline text-ink mb-2 leading-tight">
+          If the market moves {pct}%…
         </h1>
-        <p className="text-[13px] text-ink-tertiary mb-8">
+        <p className="text-[13px] text-ink-3 mb-8">
           On the {formatINR(amount)} you're redeeming.
         </p>
 
-        {/* Two symmetrical scenario blocks — identical in every dimension */}
+        {/* Perfectly symmetrical scenario cards */}
         <div className="grid grid-cols-2 gap-3 mb-8">
           {scenarios.map((s) => (
             <div
               key={s.label}
-              className="bg-white rounded-xl border border-border-DEFAULT p-4 flex flex-col gap-3"
+              className="bg-surface rounded-xl border border-border p-4 flex flex-col gap-2"
             >
               <p className="eyebrow">{s.label}</p>
-              <p className="text-[13px] text-ink-secondary leading-relaxed">{s.body}</p>
+              <p className="text-num-md tabular font-[700] text-ink leading-none">
+                {s.result}
+              </p>
+              <p className="text-[12px] text-ink-2 leading-relaxed">{s.note}</p>
             </div>
           ))}
         </div>
 
-        <div className="space-y-1">
-          <p className="text-[13px] text-ink-secondary leading-relaxed">
-            We can't predict which happens.
-          </p>
-          <p className="text-[11px] text-ink-tertiary leading-relaxed">
-            These are illustrations, not predictions.
+        <div className="bg-border-2 rounded-xl p-4">
+          <p className="text-[13px] text-ink-2 leading-relaxed">
+            We can't predict which happens. These are illustrations, not predictions.
           </p>
         </div>
       </div>

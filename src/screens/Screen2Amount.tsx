@@ -22,61 +22,53 @@ export function Screen2Amount({ initialAmount, onBack, onContinue }: Screen2Amou
 
   return (
     <ScreenShell onBack={onBack}>
-      <div className="pt-5 animate-fade-in-up">
+      <div className="pt-6 animate-fade-in-up">
 
-        <h1 className="text-headline text-ink-DEFAULT mb-1 leading-snug">
+        <h1 className="text-headline text-ink mb-1 leading-tight">
           How much would you like to redeem?
         </h1>
-        <p className="text-[13px] text-ink-tertiary mb-10">
+        <p className="text-[13px] text-ink-3 mb-10">
           Maximum {formatINR(fund.currentValue)}
         </p>
 
-        {/* Premium amount input */}
+        {/* Large premium amount input */}
         <div className="mb-10">
-          <div className="flex items-baseline justify-center gap-0.5 py-3">
-            <span
-              className="text-amount-lg font-bold text-ink-faint tabular leading-none select-none"
-              aria-hidden="true"
-            >
-              ₹
-            </span>
+          <div className="flex items-baseline justify-center gap-1 py-3">
+            <span className="text-num-lg font-[750] text-ink-4 tabular leading-none select-none">₹</span>
             <input
               type="text"
               inputMode="numeric"
               value={formatted}
               onChange={handleAmountChange}
-              style={{ width: `${Math.max(formatted.length, 1) + 0.25}ch` }}
-              className="text-display font-bold tabular text-ink-DEFAULT bg-transparent border-none outline-none text-center max-w-[300px] focus:text-ink-DEFAULT tracking-tight leading-none"
+              style={{ width: `${Math.max(formatted.length, 2) + 0.5}ch` }}
+              className="text-display tabular font-[750] text-ink bg-transparent border-none outline-none text-center max-w-[310px] tracking-tight leading-none"
               aria-label="Redemption amount"
             />
           </div>
-          {/* Elegant underline input indicator */}
-          <div className="h-px w-16 mx-auto bg-ink-faint rounded-full" />
-
+          {/* Input underline indicator */}
+          <div className="h-[2px] w-20 mx-auto bg-accent rounded-full" />
           {tooHigh && (
-            <p className="text-[13px] text-ink-secondary text-center mt-4" role="status">
+            <p className="text-[13px] text-ink-2 text-center mt-4" role="status">
               Exceeds holding value ({formatINR(fund.currentValue)})
             </p>
           )}
         </div>
 
-        {/* Summary row */}
-        <div className="border-t border-border-DEFAULT pt-4 mb-8 space-y-0">
-          <div className="flex items-baseline justify-between py-2.5">
-            <p className="text-[13px] text-ink-secondary font-medium">Estimated proceeds</p>
-            <p className="text-[15px] font-semibold tabular text-ink-DEFAULT">
+        {/* Summary rows */}
+        <div className="bg-surface rounded-xl border border-border p-5 mb-8 divide-y divide-border-2">
+          <div className="flex items-baseline justify-between pb-3">
+            <span className="text-[13px] text-ink-2 font-medium">Estimated proceeds</span>
+            <span className="text-[15px] font-semibold tabular text-ink">
               {formatINR(tooHigh ? 0 : amount)}
-            </p>
+            </span>
           </div>
-          <div className="h-px bg-border-subtle" />
-          <div className="flex items-baseline justify-between py-2.5">
-            <p className="text-[13px] text-ink-secondary font-medium">Expected credit</p>
-            <p className="text-[15px] font-semibold tabular text-ink-DEFAULT">
-              {redemption.expectedCredit}
-            </p>
+          <div className="flex items-baseline justify-between pt-3">
+            <span className="text-[13px] text-ink-2 font-medium">Expected credit</span>
+            <span className="text-[15px] font-semibold tabular text-ink">{redemption.expectedCredit}</span>
           </div>
         </div>
 
+        {/* SOLID PRIMARY BUTTON */}
         <Button
           onClick={() => onContinue(amount)}
           className="w-full"

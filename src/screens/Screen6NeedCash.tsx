@@ -37,22 +37,25 @@ export function Screen6NeedCash({ amount, onBack, onConfirm }: Screen6NeedCashPr
         <ActionPair
           left={{ label: 'Back to receipt', onClick: onBack }}
           right={{
-            label: `Confirm ${formatINR(value)}`,
+            label: 'Continue',
             onClick: () => onConfirm(value),
             disabled: !valid,
           }}
         />
       }
     >
-      <div className="pt-5 animate-fade-in-up">
-        <h1 className="text-headline text-ink-DEFAULT mb-8 leading-snug">
+      <div className="pt-6 animate-fade-in-up">
+        <h1 className="text-headline text-ink mb-1 leading-tight">
           How much do you need?
         </h1>
+        <p className="text-[13px] text-ink-3 mb-8">
+          Maximum {formatINR(fund.currentValue)}
+        </p>
 
-        {/* Large amount input — the visual focus */}
-        <div className="mb-1">
-          <div className="flex items-baseline justify-center gap-0.5 py-2">
-            <span className="text-amount-lg font-bold text-ink-faint tabular leading-none select-none">
+        {/* Large editable amount field — visual hero */}
+        <div className="mb-8">
+          <div className="flex items-baseline justify-center gap-1 py-3">
+            <span className="text-num-lg font-[750] text-ink-4 tabular leading-none select-none">
               ₹
             </span>
             <input
@@ -60,36 +63,38 @@ export function Screen6NeedCash({ amount, onBack, onConfirm }: Screen6NeedCashPr
               inputMode="numeric"
               value={formatted}
               onChange={handleChange}
-              style={{ width: `${Math.max(formatted.length, 1) + 0.25}ch` }}
-              className="text-display font-bold tabular text-ink-DEFAULT bg-transparent border-none outline-none text-center max-w-[280px] tracking-tight leading-none"
+              style={{ width: `${Math.max(formatted.length, 2) + 0.5}ch` }}
+              className="text-display tabular font-[750] text-ink bg-transparent border-none outline-none text-center max-w-[310px] tracking-tight leading-none"
               aria-label="Amount you need"
             />
           </div>
-          <div className="h-px w-16 mx-auto bg-ink-faint rounded-full" />
+          <div className="h-[2px] w-20 mx-auto bg-accent rounded-full" />
+          <p className="text-[12px] text-ink-3 text-center mt-3" role="status">
+            {tooHigh
+              ? `Exceeds holding value (${formatINR(fund.currentValue)})`
+              : 'You can edit this amount.'}
+          </p>
         </div>
-        <p className="text-[12px] text-ink-tertiary text-center mt-3 mb-8" role="status">
-          {tooHigh ? "Exceeds this holding's value." : 'You can edit this amount.'}
-        </p>
 
         {/* Goal impact */}
-        <div className="border-t border-border-DEFAULT pt-1">
-          <div className="py-4 border-b border-border-subtle">
+        <div className="border-t border-border pt-1">
+          <div className="py-5 border-b border-border">
             <p className="eyebrow mb-3">Your goal</p>
-            <p className="text-[13px] font-semibold text-ink-DEFAULT mb-2">{goal.name}</p>
+            <p className="text-[14px] font-semibold text-ink mb-2">{goal.name}</p>
             <div className="flex items-baseline gap-3">
-              <span className="text-amount-md font-bold tabular text-ink-tertiary leading-none">
+              <span className="text-num-md tabular font-[700] text-ink-3 leading-none">
                 {formatLakhs(goal.currentValue)}
               </span>
-              <span className="text-ink-faint text-lg leading-none">→</span>
-              <span className="text-amount-md font-bold tabular text-ink-DEFAULT leading-none">
+              <span className="text-ink-4 text-xl leading-none">→</span>
+              <span className="text-num-md tabular font-[700] text-ink leading-none">
                 {valid ? formatLakhs(goalAfter(value)) : '—'}
               </span>
             </div>
           </div>
 
-          <div className="pt-1">
-            <p className="eyebrow pt-4 mb-2">Transaction</p>
-            <div className="space-y-0 divide-y divide-border-subtle">
+          <div className="py-2 border-b border-border">
+            <p className="eyebrow pt-3 mb-1">Transaction</p>
+            <div className="divide-y divide-border-2">
               <MetricRow label="Exit load" value={formatINR(redemption.exitLoad)} />
               <MetricRow label="Estimated tax" value={formatINR(redemption.estimatedTax)} />
               <MetricRow label="Expected credit" value={redemption.expectedCredit} />
@@ -97,7 +102,7 @@ export function Screen6NeedCash({ amount, onBack, onConfirm }: Screen6NeedCashPr
           </div>
         </div>
 
-        <p className="text-[11px] text-ink-tertiary leading-relaxed mt-4">
+        <p className="text-[12px] text-ink-3 leading-relaxed mt-4">
           Units selected for this illustration: oldest eligible units first (FIFO).
         </p>
       </div>
