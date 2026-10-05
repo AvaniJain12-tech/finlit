@@ -7,6 +7,8 @@ interface ScreenShellProps {
   showHeader?: boolean;
   brandLabel?: string;
   className?: string;
+  /** Pinned to the bottom of the viewport so decision buttons are always visible. */
+  footer?: ReactNode;
 }
 
 export function ScreenShell({
@@ -15,6 +17,7 @@ export function ScreenShell({
   showHeader = true,
   brandLabel = 'FinLit Ventures',
   className = '',
+  footer,
 }: ScreenShellProps) {
   return (
     <div className={`flex flex-col min-h-screen bg-slate-50 animate-fade-in ${className}`}>
@@ -50,6 +53,11 @@ export function ScreenShell({
       <main className="flex-1 mx-auto w-full max-w-md px-5 pb-8 pt-2">
         {children}
       </main>
+      {footer && (
+        <div className="sticky bottom-0 z-20 bg-slate-50/90 backdrop-blur-xl border-t border-slate-200/60">
+          <div className="mx-auto max-w-md px-5 py-3">{footer}</div>
+        </div>
+      )}
     </div>
   );
 }

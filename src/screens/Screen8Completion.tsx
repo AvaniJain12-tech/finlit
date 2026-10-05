@@ -3,9 +3,16 @@ import { CheckCircle2 } from 'lucide-react';
 import { ScreenShell } from '@/components/ui/ScreenShell';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { MetricRow } from '@/components/ui/MetricRow';
 import { AmountDisplay } from '@/components/ui/AmountDisplay';
-import { redemption, goal, allocation, formatINR, formatLakhs } from '@/lib/data';
+import {
+  redemption,
+  goal,
+  goalAfter,
+  equitySharePct,
+  formatINR,
+  formatLakhs,
+  formatPct,
+} from '@/lib/data';
 
 interface Screen8CompletionProps {
   amount: number;
@@ -41,17 +48,23 @@ export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps)
             </span>
             <span className="text-slate-300">→</span>
             <span className="text-xl font-bold tabular text-slate-900">
-              {formatLakhs(goal.afterRedemption)}
+              {formatLakhs(goalAfter(amount))}
             </span>
           </div>
         </Card>
 
         <Card className="mb-6">
-          <p className="text-sm font-semibold text-slate-700 mb-3">Equity allocation</p>
+          <p className="text-sm font-semibold text-slate-700 mb-3">
+            Equity share of your mutual-fund portfolio
+          </p>
           <div className="flex items-baseline gap-2.5">
-            <span className="text-xl font-bold tabular text-slate-400">{allocation.current}%</span>
+            <span className="text-xl font-bold tabular text-slate-400">
+              {formatPct(equitySharePct())}
+            </span>
             <span className="text-slate-300">→</span>
-            <span className="text-xl font-bold tabular text-slate-900">{allocation.after}%</span>
+            <span className="text-xl font-bold tabular text-slate-900">
+              {formatPct(equitySharePct(amount))}
+            </span>
           </div>
         </Card>
 

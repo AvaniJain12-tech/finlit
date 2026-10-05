@@ -1,21 +1,28 @@
 import { Info } from 'lucide-react';
 import { ScreenShell } from '@/components/ui/ScreenShell';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { ActionPair } from '@/components/ui/ActionPair';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { MetricRow } from '@/components/ui/MetricRow';
 import { AmountDisplay } from '@/components/ui/AmountDisplay';
+import { ExpandableSection } from '@/components/ui/ExpandableSection';
 import {
   fund,
   redemption,
   goal,
-  allocation,
+  unknowns,
+  realisedPL,
+  goalAfter,
+  equitySharePct,
+  roundTo,
   formatINR,
   formatLakhs,
+  formatPct,
 } from '@/lib/data';
 
 interface Screen3ReceiptProps {
   amount: number;
+  purpose: string | null;
   onBack: () => void;
   onWhatsThisFor: () => void;
   onWhyAmISeeing: () => void;
@@ -25,14 +32,26 @@ interface Screen3ReceiptProps {
 
 export function Screen3Receipt({
   amount,
+  purpose,
   onBack,
   onWhatsThisFor,
   onWhyAmISeeing,
   onChangeAmount,
   onConfirm,
 }: Screen3ReceiptProps) {
+  const pl = realisedPL(amount);
+  const plApprox = roundTo(Math.abs(pl), 100);
+
   return (
-    <ScreenShell onBack={onBack}>
+    <ScreenShell
+      onBack={onBack}
+      footer={
+        <ActionPair
+          left={{ label: 'Change amount', onClick: onChangeAmount }}
+          right={{ label: 'Confirm redemption', onClick: onConfirm }}
+        />
+      }
+    >
       <div className="pt-3 animate-fade-in-up">
         <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-2">
           Before you confirm
@@ -42,18 +61,13 @@ export function Screen3Receipt({
         </h1>
         <p className="text-[15px] text-slate-500 mb-6">Your money, your call.</p>
 
-        {/* Section 1 — What happened */}
-        <SectionHeader label="What happened" className="mb-3" />
-        <Card className="mb-6">
-          <MetricRow
-            label="Your fund"
-            value={`${fund.pctBelowHigh}% below its 52-week high`}
-          />
-          <div className="h-px bg-slate-100 my-1" />
-          <MetricRow label="Similar funds" value={`${fund.similarFundsPctBelow}% below`} />
-        </Card>
+        {purpose && (
+          <p className="text-xs text-slate-500 -mt-3 mb-6">
+            Noted: {purpose}. The facts below stay the same.
+          </p>
+        )}
 
-        {/* Section 2 — What you get */}
+        {/* 1 — What you get */}
         <SectionHeader label="What you get" className="mb-3" />
         <Card className="mb-6">
           <AmountDisplay amount={formatINR(amount)} size="lg" className="mb-1" />
@@ -62,18 +76,24 @@ export function Screen3Receipt({
           </p>
         </Card>
 
-        {/* Section 3 — What you give up */}
-        <SectionHeader label="What you give up" className="mb-3" />
+        {/* 2 — What it costs */}
+        <SectionHeader label="What it costs" className="mb-3" />
         <Card className="mb-6">
-          <MetricRow label="Realized P/L" value={formatINR(redemption.realizedPL)} />
+          <MetricRow
+            label={pl < 0 ? 'Realised loss' : 'Realised gain'}
+            value={`≈ ${formatINR(plApprox)}`}
+          />
           <div className="h-px bg-slate-100 my-1" />
           <MetricRow label="Exit load" value={formatINR(redemption.exitLoad)} />
           <div className="h-px bg-slate-100 my-1" />
           <MetricRow label="Estimated tax" value={formatINR(redemption.estimatedTax)} />
-          <p className="text-[11px] text-slate-400 mt-3">Illustrative sample data.</p>
+          <p className="text-xs text-slate-500 mt-3 leading-relaxed">
+            ₹0 because the units sold are at a loss and held over 12 months.
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1">Illustrative sample data.</p>
         </Card>
 
-        {/* Section 4 — Your goal */}
+        {/* 3 — Your goal */}
         <SectionHeader label="Your goal" className="mb-3" />
         <Card className="mb-6">
           <p className="text-sm font-semibold text-slate-700 mb-3">{goal.name}</p>
@@ -83,33 +103,60 @@ export function Screen3Receipt({
             </span>
             <span className="text-slate-300 text-lg">→</span>
             <span className="text-2xl font-bold tabular text-slate-900">
-              {formatLakhs(goal.afterRedemption)}
+              {formatLakhs(goalAfter(amount))}
             </span>
           </div>
           <p className="text-xs text-slate-400">
-            This fund currently represents {goal.fundRepresentationPct}% of this goal.
+            Value today. This fund is {goal.fundRepresentationPct}% of this goal.
           </p>
         </Card>
 
-        {/* Section 5 — Your mix */}
+        {/* 4 — Your mix */}
         <SectionHeader label="Your mix" className="mb-3" />
         <Card className="mb-6">
-          <p className="text-sm font-semibold text-slate-700 mb-3">Equity allocation</p>
+          <p className="text-sm font-semibold text-slate-700 mb-3">
+            Equity share of your mutual-fund portfolio
+          </p>
           <div className="flex items-baseline gap-2.5">
-            <span className="text-2xl font-bold tabular text-slate-400">{allocation.current}%</span>
+            <span className="text-2xl font-bold tabular text-slate-400">
+              {formatPct(equitySharePct())}
+            </span>
             <span className="text-slate-300 text-lg">→</span>
-            <span className="text-2xl font-bold tabular text-slate-900">{allocation.after}%</span>
+            <span className="text-2xl font-bold tabular text-slate-900">
+              {formatPct(equitySharePct(amount))}
+            </span>
           </div>
         </Card>
 
-        {/* Section 6 — One more thing */}
-        <Card className="mb-5 bg-slate-100/60 border-slate-200/60">
+        {/* 5 — What we don't know */}
+        <SectionHeader label="What we don't know" className="mb-3" />
+        <Card className="mb-6">
+          <ul className="space-y-2.5 text-sm text-slate-600">
+            {unknowns.map((item) => (
+              <li key={item} className="flex items-center gap-2.5">
+                <span className="w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        {/* One more thing */}
+        <Card className="mb-4 bg-slate-100/60 border-slate-200/60">
           <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-2">
             One more thing
           </p>
           <p className="text-sm text-slate-600 leading-relaxed">
             Selling now means a second decision later about when, or whether, to buy back.
           </p>
+        </Card>
+
+        {/* Fund movement — one tap away, not the lead */}
+        <Card padded={false} className="px-5 mb-5">
+          <ExpandableSection title="How has this fund moved?">
+            Your fund is {fund.pctBelowHigh}% below its 52-week high. Similar funds are{' '}
+            {fund.similarFundsPctBelow}% below theirs, over the same 52-week window.
+          </ExpandableSection>
         </Card>
 
         <button
@@ -120,23 +167,12 @@ export function Screen3Receipt({
           Why am I seeing this?
         </button>
 
-        {/* Goal link */}
         <button
           onClick={onWhatsThisFor}
-          className="block w-full text-left text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors mb-6"
+          className="block w-full text-left text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors mb-2"
         >
           What's this money for?
         </button>
-
-        {/* Bottom actions — visually equal */}
-        <div className="flex gap-3">
-          <Button variant="secondary" onClick={onChangeAmount} className="flex-1">
-            Change amount
-          </Button>
-          <Button variant="primary" onClick={onConfirm} className="flex-1">
-            Confirm redemption
-          </Button>
-        </div>
       </div>
     </ScreenShell>
   );

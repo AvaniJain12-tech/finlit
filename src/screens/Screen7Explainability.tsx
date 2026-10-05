@@ -2,12 +2,30 @@ import { ScreenShell } from '@/components/ui/ScreenShell';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ExpandableSection } from '@/components/ui/ExpandableSection';
+import {
+  goal,
+  portfolio,
+  unknowns,
+  costOfUnitsSold,
+  realisedPL,
+  goalAfter,
+  equitySharePct,
+  roundTo,
+  formatINR,
+  formatLakhs,
+  formatPct,
+} from '@/lib/data';
 
 interface Screen7ExplainabilityProps {
+  amount: number;
   onBack: () => void;
 }
 
-export function Screen7Explainability({ onBack }: Screen7ExplainabilityProps) {
+export function Screen7Explainability({ amount, onBack }: Screen7ExplainabilityProps) {
+  const cost = costOfUnitsSold(amount);
+  const pl = realisedPL(amount);
+  const plWord = pl < 0 ? 'loss' : 'gain';
+
   return (
     <ScreenShell onBack={onBack}>
       <div className="pt-3 animate-fade-in-up">
@@ -52,7 +70,7 @@ export function Screen7Explainability({ onBack }: Screen7ExplainabilityProps) {
             <ul className="space-y-2.5 text-sm text-slate-600">
               {[
                 'Redemption amount',
-                'Realized P/L',
+                'Realised P/L',
                 'Goal impact',
                 'Portfolio allocation change',
               ].map((item) => (
@@ -65,19 +83,14 @@ export function Screen7Explainability({ onBack }: Screen7ExplainabilityProps) {
           </Card>
         </div>
 
-        {/* Unknowns */}
+        {/* Unknowns — same list as the receipt */}
         <div className="mb-6">
           <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
             Unknowns
           </p>
           <Card padded={false} className="p-4">
             <ul className="space-y-2.5 text-sm text-slate-600">
-              {[
-                'Future market returns',
-                'Your future income',
-                'Expenses outside this app',
-                'Tax circumstances not available to the app',
-              ].map((item) => (
+              {unknowns.map((item) => (
                 <li key={item} className="flex items-center gap-2.5">
                   <span className="w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
                   {item}
@@ -87,19 +100,26 @@ export function Screen7Explainability({ onBack }: Screen7ExplainabilityProps) {
           </Card>
         </div>
 
-        {/* Expandable sections */}
+        {/* How each number was calculated */}
         <Card padded={false} className="p-5 mb-6">
           <ExpandableSection title="How was P/L calculated?">
-            Realized P/L is the difference between the redemption value and the proportional
-            purchase cost of the units being sold, based on your purchase price and dates.
+            Units are sold oldest first (FIFO). The units sold cost {formatINR(cost)} and are
+            redeemed for {formatINR(amount)}, so the realised {plWord} is{' '}
+            {formatINR(Math.abs(pl))} (≈ {formatINR(roundTo(Math.abs(pl), 100))}).
           </ExpandableSection>
           <ExpandableSection title="Why this tax estimate?">
-            The tax estimate uses illustrative sample data for this prototype. In a live app,
-            it would factor in holding period, gains, and applicable capital gains tax rules.
+            The units sold are at a loss, so there is no capital-gains tax; they are past the
+            exit-load period, so load is ₹0.
           </ExpandableSection>
           <ExpandableSection title="How did the goal number change?">
-            The goal value is reduced by the redemption amount. This shows the projected goal
-            value after the withdrawal, based on current sample data.
+            {goal.name} holds {formatLakhs(goal.currentValue)} today; this redemption removes{' '}
+            {formatLakhs(amount)} → {formatLakhs(goalAfter(amount))}. Today's value only — no
+            projected returns.
+          </ExpandableSection>
+          <ExpandableSection title="How did the equity share change?">
+            ({formatLakhs(portfolio.equity)} − {formatLakhs(amount)}) ÷ (
+            {formatLakhs(portfolio.total)} − {formatLakhs(amount)}) ={' '}
+            {formatPct(equitySharePct(amount), 1)}.
           </ExpandableSection>
         </Card>
 

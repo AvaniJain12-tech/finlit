@@ -1,81 +1,79 @@
 import { ScreenShell } from '@/components/ui/ScreenShell';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { AmountDisplay } from '@/components/ui/AmountDisplay';
-import { marketScenarios, formatLakhs, formatINR } from '@/lib/data';
+import { ActionPair } from '@/components/ui/ActionPair';
+import { marketScenarios, scenarioMove, formatINR } from '@/lib/data';
 
 interface Screen5MarketWorryProps {
+  amount: number;
   onBack: () => void;
-  onChangeAmount: () => void;
-  onContinue: () => void;
+  onBackToReceipt: () => void;
+  onConfirm: () => void;
 }
 
 export function Screen5MarketWorry({
+  amount,
   onBack,
-  onChangeAmount,
-  onContinue,
+  onBackToReceipt,
+  onConfirm,
 }: Screen5MarketWorryProps) {
+  const move = formatINR(scenarioMove(amount));
+  const pct = marketScenarios.movePct;
+
+  // Both scenarios share one card style: neither outcome is presented as preferable.
+  const scenarios = [
+    {
+      label: `If the fund falls ${pct}% before you buy back`,
+      body: (
+        <>
+          You avoid about <span className="font-semibold text-slate-900">{move}</span> of decline.
+        </>
+      ),
+    },
+    {
+      label: `If the fund rises ${pct}%`,
+      body: (
+        <>
+          Buying back the same units costs about{' '}
+          <span className="font-semibold text-slate-900">{move}</span> more.
+        </>
+      ),
+    },
+  ];
+
   return (
-    <ScreenShell onBack={onBack}>
+    <ScreenShell
+      onBack={onBack}
+      footer={
+        <ActionPair
+          left={{ label: 'Back to receipt', onClick: onBackToReceipt }}
+          right={{ label: `Confirm ${formatINR(amount)}`, onClick: onConfirm }}
+        />
+      }
+    >
       <div className="pt-3 animate-fade-in-up">
-        <h1 className="text-headline text-slate-900 mb-6">If the market moves next</h1>
+        <h1 className="text-headline text-slate-900 mb-2">If the market moves next</h1>
+        <p className="text-sm text-slate-500 mb-6">
+          On the {formatINR(amount)} you're redeeming.
+        </p>
 
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <Card className="p-4" padded={false}>
-            <div className="p-4 pb-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 mb-3">
-                If the fund falls {marketScenarios.fallPct}%
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          {scenarios.map((s) => (
+            <Card key={s.label}>
+              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 mb-2">
+                {s.label}
               </p>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-sm font-semibold text-slate-400 tabular">
-                  {formatINR(marketScenarios.currentValue)}
-                </span>
-                <span className="text-slate-300">→</span>
-              </div>
-              <AmountDisplay
-                amount={formatINR(marketScenarios.fallValue)}
-                size="md"
-                className="mt-0.5"
-              />
-            </div>
-          </Card>
-
-          <Card className="p-4" padded={false}>
-            <div className="p-4 pb-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400 mb-3">
-                If the fund rises {marketScenarios.risePct}%
-              </p>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-sm font-semibold text-slate-400 tabular">
-                  {formatINR(marketScenarios.currentValue)}
-                </span>
-                <span className="text-slate-300">→</span>
-              </div>
-              <AmountDisplay
-                amount={formatINR(marketScenarios.riseValue)}
-                size="md"
-                className="mt-0.5"
-              />
-            </div>
-          </Card>
+              <p className="text-[15px] text-slate-600 leading-relaxed">{s.body}</p>
+            </Card>
+          ))}
         </div>
 
-        <div className="mb-8 space-y-1.5">
+        <div className="mb-4 space-y-1.5">
           <p className="text-sm text-slate-600 leading-relaxed">
             We can't predict which happens.
           </p>
           <p className="text-xs text-slate-400 leading-relaxed">
             These are illustrations, not predictions.
           </p>
-        </div>
-
-        <div className="flex gap-3">
-          <Button variant="secondary" onClick={onChangeAmount} className="flex-1">
-            Change amount
-          </Button>
-          <Button variant="primary" onClick={onContinue} className="flex-1">
-            Continue
-          </Button>
         </div>
       </div>
     </ScreenShell>

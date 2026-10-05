@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Screen1Fund } from '@/screens/Screen1Fund';
 import { Screen2Amount } from '@/screens/Screen2Amount';
 import { Screen3Receipt } from '@/screens/Screen3Receipt';
@@ -22,58 +22,46 @@ type Screen =
 function App() {
   const [screen, setScreen] = useState<Screen>('fund');
   const [amount, setAmount] = useState<number>(redemption.amount);
-  const [returnTo, setReturnTo] = useState<Screen>('receipt');
+  const [purpose, setPurpose] = useState<string | null>(null);
 
   const go = useCallback((s: Screen) => setScreen(s), []);
 
-  const handleRedeem = () => go('amount');
+  // Every screen opens at the top, not at the previous screen's scroll position.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [screen]);
 
   const handleAmountContinue = (val: number) => {
     setAmount(val);
     go('receipt');
   };
 
+  // Only an explicit Confirm submits the redemption.
   const handleConfirm = () => go('completion');
 
-  const handleWhatsThisFor = () => {
-    setReturnTo('receipt');
-    go('reason');
+  const handleReasonOther = (reason: string) => {
+    setPurpose(reason === 'Skip' ? null : reason);
+    go('receipt');
   };
 
-  const handleReasonWorried = () => {
-    setReturnTo('completion');
-    go('marketWorry');
-  };
-
-  const handleReasonNeedCash = () => {
-    setReturnTo('completion');
-    go('needCash');
-  };
-
-  const handleReasonOther = () => {
+  const handleNeedCashConfirm = (val: number) => {
+    setAmount(val);
     go('completion');
   };
-
-  const handleMarketWorryContinue = () => go('completion');
-
-  const handleNeedCashChangeToLower = () => {
-    setAmount(50000);
-    go('completion');
-  };
-
-  const handleNeedCashKeep = () => go('completion');
 
   const handleRestart = () => {
     setAmount(redemption.amount);
+    setPurpose(null);
     go('fund');
   };
 
   switch (screen) {
     case 'fund':
-      return <Screen1Fund onRedeem={handleRedeem} />;
+      return <Screen1Fund onRedeem={() => go('amount')} />;
     case 'amount':
       return (
         <Screen2Amount
+          initialAmount={amount}
           onBack={() => go('fund')}
           onContinue={handleAmountContinue}
         />
@@ -82,8 +70,9 @@ function App() {
       return (
         <Screen3Receipt
           amount={amount}
+          purpose={purpose}
           onBack={() => go('amount')}
-          onWhatsThisFor={handleWhatsThisFor}
+          onWhatsThisFor={() => go('reason')}
           onWhyAmISeeing={() => go('explainability')}
           onChangeAmount={() => go('amount')}
           onConfirm={handleConfirm}
@@ -93,17 +82,24 @@ function App() {
       return (
         <Screen4Reason
           onBack={() => go('receipt')}
-          onWorriedMarkets={handleReasonWorried}
-          onNeedCash={handleReasonNeedCash}
+          onWorriedMarkets={() => {
+            setPurpose('Worried markets will fall');
+            go('marketWorry');
+          }}
+          onNeedCash={() => {
+            setPurpose('Need cash');
+            go('needCash');
+          }}
           onOtherContinue={handleReasonOther}
         />
       );
     case 'marketWorry':
       return (
         <Screen5MarketWorry
+          amount={amount}
           onBack={() => go('reason')}
-          onChangeAmount={() => go('amount')}
-          onContinue={handleMarketWorryContinue}
+          onBackToReceipt={() => go('receipt')}
+          onConfirm={handleConfirm}
         />
       );
     case 'needCash':
@@ -111,16 +107,15 @@ function App() {
         <Screen6NeedCash
           amount={amount}
           onBack={() => go('receipt')}
-          onChangeToLower={handleNeedCashChangeToLower}
-          onKeepRequested={handleNeedCashKeep}
+          onConfirm={handleNeedCashConfirm}
         />
       );
     case 'explainability':
-      return <Screen7Explainability onBack={() => go('receipt')} />;
+      return <Screen7Explainability amount={amount} onBack={() => go('receipt')} />;
     case 'completion':
       return <Screen8Completion amount={amount} onRestart={handleRestart} />;
     default:
-      return <Screen1Fund onRedeem={handleRedeem} />;
+      return <Screen1Fund onRedeem={() => go('amount')} />;
   }
 }
 

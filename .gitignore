@@ -21,3 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# QA temp files
+qa-extract/
+*.zip

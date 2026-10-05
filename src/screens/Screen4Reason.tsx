@@ -8,6 +8,7 @@ interface Screen4ReasonProps {
   onBack: () => void;
   onWorriedMarkets: () => void;
   onNeedCash: () => void;
+  /** Every other chip, including Skip, returns to the receipt. */
   onOtherContinue: (reason: string) => void;
 }
 
@@ -19,10 +20,6 @@ export function Screen4Reason({
 }: Screen4ReasonProps) {
   const [selected, setSelected] = useState<string | null>(null);
 
-  const handleSelect = (chip: string) => {
-    setSelected(chip);
-  };
-
   const handleContinue = () => {
     if (!selected) return;
     if (selected === 'Worried markets will fall') {
@@ -33,9 +30,6 @@ export function Screen4Reason({
       onOtherContinue(selected);
     }
   };
-
-  const isSpecial = selected === 'Worried markets will fall' || selected === 'Need cash';
-  const showContinue = selected !== null && !isSpecial;
 
   return (
     <ScreenShell onBack={onBack}>
@@ -52,18 +46,12 @@ export function Screen4Reason({
               key={chip}
               label={chip}
               selected={selected === chip}
-              onClick={() => handleSelect(chip)}
+              onClick={() => setSelected(chip)}
             />
           ))}
         </div>
 
-        {showContinue && (
-          <Button onClick={handleContinue} className="w-full animate-fade-in-up">
-            Continue
-          </Button>
-        )}
-
-        {isSpecial && (
+        {selected && (
           <Button onClick={handleContinue} className="w-full animate-fade-in-up">
             Continue
           </Button>
