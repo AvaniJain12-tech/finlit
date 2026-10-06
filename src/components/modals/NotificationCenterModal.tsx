@@ -122,7 +122,7 @@ export function NotificationCenterModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-ink/40 backdrop-blur-[2px] animate-fade-in">
       <div
-        className="w-full max-w-[430px] bg-bg rounded-t-2xl sm:rounded-2xl border border-border shadow-xl flex flex-col max-h-[85vh] animate-fade-in-up overflow-hidden"
+        className="w-full sm:max-w-lg bg-bg rounded-t-2xl sm:rounded-2xl border border-border shadow-xl flex flex-col max-h-[85vh] animate-fade-in-up overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-labelledby="notif-center-title"

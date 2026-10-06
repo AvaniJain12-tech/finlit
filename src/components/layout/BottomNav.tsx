@@ -20,7 +20,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Bottom Navigation"
-      className="sticky bottom-0 z-30 bg-surface/95 backdrop-blur-md border-t border-border"
+      className="md:hidden sticky bottom-0 z-30 bg-surface/95 backdrop-blur-md border-t border-border"
     >
       <div className="grid grid-cols-4 h-[60px] max-w-[430px] mx-auto px-2">
         {navItems.map((item) => {

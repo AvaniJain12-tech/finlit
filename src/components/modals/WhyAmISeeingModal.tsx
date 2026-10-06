@@ -11,7 +11,7 @@ export function WhyAmISeeingModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-ink/40 backdrop-blur-[2px] animate-fade-in">
       <div
-        className="w-full max-w-[420px] bg-surface rounded-t-2xl sm:rounded-2xl border border-border shadow-xl overflow-hidden animate-fade-in-up"
+        className="w-full sm:max-w-xl bg-surface rounded-t-2xl sm:rounded-2xl border border-border shadow-xl overflow-hidden animate-fade-in-up"
         role="dialog"
         aria-modal="true"
         aria-labelledby="why-modal-title"

@@ -23,24 +23,24 @@ export function AppShell({
   showBackOnly = false,
 }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-[#F0EEE6] flex items-start justify-center text-ink selection:bg-accent/20">
-      <div className="relative flex flex-col min-h-screen w-full max-w-[430px] bg-bg shadow-xl overflow-x-hidden">
-        {/* Top Navigation */}
-        <TopNav onBack={onBack} title={title} showBackOnly={showBackOnly} />
+    <div className="min-h-screen bg-bg flex flex-col text-ink selection:bg-accent/20">
+      {/* Top Navigation */}
+      <TopNav onBack={onBack} title={title} showBackOnly={showBackOnly} />
 
-        {/* Main Content Area */}
-        <main className="flex-1 px-5">{children}</main>
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {children}
+      </main>
 
-        {/* Bottom Tab Navigation */}
-        {showBottomNav && <BottomNav />}
+      {/* Mobile Bottom Tab Navigation (hidden on md+ laptop screens) */}
+      {showBottomNav && <BottomNav />}
 
-        {/* Global Overlays & Modals */}
-        <Toast />
-        <NotificationCenterModal />
-        <SettingsModal />
-        <AIExplanationModal />
-        <WhyAmISeeingModal />
-      </div>
+      {/* Global Overlays & Modals */}
+      <Toast />
+      <NotificationCenterModal />
+      <SettingsModal />
+      <AIExplanationModal />
+      <WhyAmISeeingModal />
     </div>
   );
 }
