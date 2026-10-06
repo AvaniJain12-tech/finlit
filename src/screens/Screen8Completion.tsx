@@ -14,9 +14,10 @@ import {
 interface Screen8CompletionProps {
   amount: number;
   onRestart: () => void;
+  onReturnHome?: () => void;
 }
 
-export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps) {
+export function Screen8Completion({ amount, onRestart, onReturnHome }: Screen8CompletionProps) {
   const [feedback, setFeedback] = useState<string | null>(null);
 
   return (
@@ -106,10 +107,17 @@ export function Screen8Completion({ amount, onRestart }: Screen8CompletionProps)
           </div>
         </div>
 
-        {/* Start over button — solid secondary */}
-        <Button variant="secondary" onClick={onRestart} className="w-full mb-4">
-          Start over
-        </Button>
+        {/* Action buttons */}
+        <div className="space-y-3 mb-6">
+          {onReturnHome && (
+            <Button variant="primary" onClick={onReturnHome} className="w-full">
+              Return to Dashboard
+            </Button>
+          )}
+          <Button variant="secondary" onClick={onRestart} className="w-full">
+            Start over
+          </Button>
+        </div>
       </div>
     </ScreenShell>
   );

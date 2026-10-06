@@ -82,7 +82,19 @@ export function Screen3Receipt({
 
           {/* WHAT IT COSTS */}
           <div className="py-6 border-b border-border">
-            <p className="eyebrow mb-4">What it costs</p>
+            <div className="flex items-center justify-between mb-4">
+              <p className="eyebrow">What it costs</p>
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined' && (window as any).__openAiExplanation) {
+                    (window as any).__openAiExplanation('loss');
+                  }
+                }}
+                className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-accent hover:underline cursor-pointer"
+              >
+                <span>Explain tax & P/L</span>
+              </button>
+            </div>
             <div className="space-y-3">
               <div className="flex items-baseline justify-between">
                 <span className="text-[13px] text-ink-2">{pl < 0 ? 'Realised loss' : 'Realised gain'}</span>
@@ -105,7 +117,19 @@ export function Screen3Receipt({
 
           {/* YOUR GOAL */}
           <div className="py-6 border-b border-border">
-            <p className="eyebrow mb-4">Your goal</p>
+            <div className="flex items-center justify-between mb-4">
+              <p className="eyebrow">Your goal</p>
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined' && (window as any).__openAiExplanation) {
+                    (window as any).__openAiExplanation('goal');
+                  }
+                }}
+                className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-accent hover:underline cursor-pointer"
+              >
+                <span>Explain arithmetic</span>
+              </button>
+            </div>
             <p className="text-[14px] font-semibold text-ink mb-3">{goal.name} · 2031</p>
             <div className="flex items-baseline gap-3">
               <span className="text-num-md tabular font-[700] text-ink-3 leading-none">
@@ -123,7 +147,19 @@ export function Screen3Receipt({
 
           {/* YOUR MIX */}
           <div className="py-6 border-b border-border">
-            <p className="eyebrow mb-4">Your mix</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="eyebrow">Your mix</p>
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined' && (window as any).__openAiExplanation) {
+                    (window as any).__openAiExplanation('equity');
+                  }
+                }}
+                className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-accent hover:underline cursor-pointer"
+              >
+                <span>How was this calculated?</span>
+              </button>
+            </div>
             <p className="text-[13px] text-ink-2 mb-3">Equity share of your mutual-fund portfolio</p>
             <div className="flex items-baseline gap-3 mb-3">
               <span className="text-num-md tabular font-[700] text-ink-3 leading-none">
@@ -170,14 +206,14 @@ export function Screen3Receipt({
         <div className="mt-5 mb-2 flex flex-col gap-3">
           <button
             onClick={onWhyAmISeeing}
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-3 hover:text-ink-2 transition-colors"
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-3 hover:text-ink-2 transition-colors cursor-pointer"
           >
             <Info className="w-3.5 h-3.5" strokeWidth={2} />
             Why am I seeing this?
           </button>
           <button
             onClick={onWhatsThisFor}
-            className="text-left text-[13px] font-medium text-ink-3 hover:text-ink-2 transition-colors"
+            className="text-left text-[13px] font-medium text-ink-3 hover:text-ink-2 transition-colors cursor-pointer"
           >
             What's this money for?
           </button>
