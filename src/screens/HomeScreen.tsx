@@ -6,6 +6,7 @@ import {
   portfolio,
   goal,
   goalAfter,
+  goalsList,
   equitySharePct,
   formatINR,
   formatLakhs,
@@ -26,31 +27,46 @@ export function HomeScreen() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* ── 1. DESKTOP HERO HEADER ───────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-border-2">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <p className="eyebrow">Demo Portfolio · Riya Jain</p>
-          </div>
-          <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
-            Good morning, Riya
-          </h1>
-          <p className="text-[14px] sm:text-[15px] text-ink-3 mt-1">
-            Here's what matters today. Consolidated across your ₹12.0L mutual fund holdings.
-          </p>
-        </div>
+      {/* ── 1. DESKTOP HERO HEADER (WRAPPED FOR NAVBAR SCROLL BEHAVIOR) ── */}
+      <section id="page-hero" className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-border-2">
+          <div>
+            {/* Demo Portfolio Badge clearly positioned above "Good morning, Riya" */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-surface border border-border shadow-sm mb-3 group hover:border-accent/40 transition-all">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+              </span>
+              <span className="text-[12px] font-extrabold text-ink tracking-tight uppercase">
+                Demo Portfolio
+              </span>
+              <span className="text-border">·</span>
+              <span className="text-[12px] font-semibold text-ink-2 tabular">
+                ₹12,00,000 Consolidated Holdings
+              </span>
+              <span className="hidden sm:inline text-[10px] font-bold px-2 py-0.5 rounded-md bg-accent-bg text-accent border border-accent-border uppercase tracking-wide">
+                Interactive Sandbox
+              </span>
+            </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={openWhyModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-colors cursor-pointer shadow-sm"
-          >
-            <Info className="w-3.5 h-3.5" />
-            <span>Why seeing this?</span>
-          </button>
+            <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
+              Good morning, Riya
+            </h1>
+            <p className="text-[14px] sm:text-[15px] text-ink-3 mt-1">
+              Here's what matters today. Consolidated across your ₹12.0L mutual fund holdings.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={openWhyModal}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-colors cursor-pointer shadow-sm"
+            >
+              <Info className="w-3.5 h-3.5" />
+              <span>Why seeing this?</span>
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* ── 2. HERO FINANCIAL METRICS ROW (4 COLS ON DESKTOP) ─────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -102,6 +118,7 @@ export function HomeScreen() {
           </div>
         </div>
       </div>
+      </section>
 
       {/* ── 3. MAIN 2-COLUMN DESKTOP GRID ───────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -112,7 +129,7 @@ export function HomeScreen() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
                 <span className="eyebrow text-ink">Today</span>
-                <span className="text-[10.5px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wide">
+                <span className="text-[10.5px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50/80 text-amber-900 border border-amber-200/80 uppercase tracking-wide">
                   {isCompleted ? 'Completed' : 'Ready for review'}
                 </span>
               </div>
@@ -306,7 +323,7 @@ export function HomeScreen() {
                   <p className="text-[13px] font-bold text-ink">Redemption review started</p>
                   <p className="text-[11.5px] text-ink-3">Sample Flexi Cap · {formatINR(amount)}</p>
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200">
                   Draft
                 </span>
               </div>
@@ -336,6 +353,192 @@ export function HomeScreen() {
           </div>
         </div>
       </div>
+
+      {/* ── 4. DEDICATED INSIGHTS & GOALS SECTION ──────────────────────── */}
+      <section className="space-y-6 pt-4 border-t border-border-2">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <Target className="w-4 h-4 text-accent" />
+              <p className="eyebrow text-accent">Decision Impact & Trajectories</p>
+            </div>
+            <h2 className="text-[22px] sm:text-[26px] font-[800] text-ink tracking-tight">
+              Insights & Life Goals
+            </h2>
+            <p className="text-[13.5px] text-ink-2 mt-1">
+              Track how your capital redemptions and market shifts alter your milestone completion dates.
+            </p>
+          </div>
+
+          <button
+            onClick={() => deepLink('goal')}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface border border-border hover:border-ink/30 text-ink text-[12.5px] font-semibold transition-all shadow-sm cursor-pointer"
+          >
+            <span>Explore All 3 Detailed Goals</span>
+            <ArrowRight className="w-4 h-4 text-accent" />
+          </button>
+        </div>
+
+        {/* 3 Goals Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {goalsList.map((g) => {
+            const isTargetGoal = g.id === 'home-2031';
+            const projectedVal = isTargetGoal ? goalAfter(amount) : g.currentValue;
+            const progressPct = Math.round((projectedVal / g.targetValue) * 100);
+
+            return (
+              <div
+                key={g.id}
+                className={`bg-surface rounded-2xl border p-5 shadow-card space-y-3.5 transition-all ${
+                  isTargetGoal ? 'border-accent/40 ring-1 ring-accent/20' : 'border-border'
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="eyebrow text-ink-3">{g.category}</span>
+                    <h3 className="text-[16px] font-bold text-ink mt-0.5">
+                      {g.name} · {g.year}
+                    </h3>
+                  </div>
+                  {isTargetGoal ? (
+                    <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-accent-bg text-accent border border-accent-border">
+                      Impacted (−₹80k)
+                    </span>
+                  ) : (
+                    <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-border-2 text-ink-3">
+                      Unaffected
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <div className="flex items-baseline justify-between mb-1">
+                    <span className="text-[12px] text-ink-3">Funded Capital</span>
+                    <div className="flex items-baseline gap-2">
+                      {isTargetGoal && (
+                        <span className="text-[12.5px] text-ink-3 tabular line-through">
+                          {formatLakhs(g.currentValue)}
+                        </span>
+                      )}
+                      <span className="text-[16px] font-[750] tabular text-ink">
+                        {formatLakhs(projectedVal)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Dual Layer Progress Bar */}
+                  <div className="w-full h-2.5 bg-border-2 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${
+                        isTargetGoal ? 'bg-accent' : 'bg-ink'
+                      }`}
+                      style={{ width: `${Math.min(progressPct, 100)}%` }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-ink-3 mt-1.5">
+                    <span>Target {formatLakhs(g.targetValue)}</span>
+                    <span className="font-semibold text-ink">{progressPct}% funded</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-border-2 flex items-center justify-between text-[11.5px]">
+                  {isTargetGoal ? (
+                    <button
+                      onClick={() => openAiExplanation('goal')}
+                      className="text-accent font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Explain goal delta</span>
+                    </button>
+                  ) : (
+                    <span className="text-ink-3 text-[11px]">Milestone on scheduled track</span>
+                  )}
+                  <button
+                    onClick={() => deepLink('goal')}
+                    className="text-ink-2 hover:text-ink font-semibold flex items-center gap-0.5 cursor-pointer"
+                  >
+                    <span>Details</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Contextual Intelligence Insight Strip */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Insight 1: 52W Drawdown Peer Comparison */}
+          <div className="bg-surface rounded-2xl border border-border p-5 shadow-card space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="eyebrow text-ink-3">Drawdown Intelligence</span>
+              <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-border-2 text-ink-2">
+                AMFI NAV
+              </span>
+            </div>
+            <h4 className="text-[14px] font-bold text-ink">
+              Sample Flexi Cap is {fund.pctBelowHigh}% below peak
+            </h4>
+            <p className="text-[12px] text-ink-2 leading-relaxed">
+              Peer group average is −{fund.similarFundsPctBelow}%. Contextualizes cyclical market pullback versus fund alpha.
+            </p>
+            <button
+              onClick={() => openAiExplanation('drawdown')}
+              className="text-accent text-[11.5px] font-semibold hover:underline flex items-center gap-1 cursor-pointer pt-1"
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Explain drawdown benchmark</span>
+            </button>
+          </div>
+
+          {/* Insight 2: Allocation Drift */}
+          <div className="bg-surface rounded-2xl border border-border p-5 shadow-card space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="eyebrow text-accent">Asset Allocation Shift</span>
+              <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-accent-bg text-accent">
+                Dynamic Drift
+              </span>
+            </div>
+            <h4 className="text-[14px] font-bold text-ink">
+              Equity exposure shifts: 78% → {equitySharePct(amount).toFixed(0)}%
+            </h4>
+            <p className="text-[12px] text-ink-2 leading-relaxed">
+              Withdrawing exclusively from equities naturally cools portfolio volatility without separate sale fees.
+            </p>
+            <button
+              onClick={() => openAiExplanation('equity')}
+              className="text-accent text-[11.5px] font-semibold hover:underline flex items-center gap-1 cursor-pointer pt-1"
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Explain asset arithmetic</span>
+            </button>
+          </div>
+
+          {/* Insight 3: Cognitive Bias Safeguard */}
+          <div className="bg-surface rounded-2xl border border-border p-5 shadow-card space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="eyebrow text-ink-3">Behavioral Guardrail</span>
+              <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-border-2 text-ink-2">
+                Re-entry Risk
+              </span>
+            </div>
+            <h4 className="text-[14px] font-bold text-ink">
+              Redeeming creates a re-entry decision
+            </h4>
+            <p className="text-[12px] text-ink-2 leading-relaxed">
+              Exiting during a drawdown creates the secondary dilemma of timing when to buy back.
+            </p>
+            <button
+              onClick={openWhyModal}
+              className="text-ink-2 hover:text-ink text-[11.5px] font-semibold hover:underline flex items-center gap-1 cursor-pointer pt-1"
+            >
+              <Info className="w-3.5 h-3.5" />
+              <span>Why am I seeing this?</span>
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

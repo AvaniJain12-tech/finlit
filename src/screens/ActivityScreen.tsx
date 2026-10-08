@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Clock, ShieldCheck, ArrowUpRight, History, CheckCircle2, FileText, ChevronRight } from 'lucide-react';
+import { Clock, ShieldCheck, ArrowUpRight, History, CheckCircle2, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useFinLit } from '@/context/FinLitContext';
 import { Button } from '@/components/ui/Button';
 import { formatINR } from '@/lib/data';
@@ -10,6 +10,8 @@ export function ActivityScreen() {
     decisionHistory,
     startRedemptionFlow,
     deepLink,
+    canGoBack,
+    goBack,
   } = useFinLit();
 
   const todayActivities = activities.filter((a) => a.dateSection === 'today');
@@ -18,27 +20,40 @@ export function ActivityScreen() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* ── HEADER ──────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-2">
-        <div>
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <p className="eyebrow">Cryptographic Audit Trail</p>
-          </div>
-          <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
-            Activity & Decisions
-          </h1>
-          <p className="text-[14px] text-ink-3 mt-1">
-            Tamper-evident chronological ledger of portfolio recalculations and investor choices.
-          </p>
-        </div>
+      {/* ── GO BACK OPTION ────────────────────────────────────────── */}
+      {canGoBack && (
+        <button
+          onClick={goBack}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface border border-border text-[12.5px] font-semibold text-ink-2 hover:text-ink hover:border-ink/20 shadow-sm transition-all group cursor-pointer"
+        >
+          <ChevronLeft className="w-4 h-4 text-ink-3 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Dashboard</span>
+        </button>
+      )}
 
-        <div className="flex items-center gap-2">
-          <span className="text-[12px] text-ink-3 font-mono">
-            {activities.length} Events logged
-          </span>
+      {/* ── HEADER (WRAPPED FOR NAVBAR SCROLL BEHAVIOR) ───────────── */}
+      <section id="page-hero" className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-2">
+          <div>
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <p className="eyebrow">Cryptographic Audit Trail</p>
+            </div>
+            <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
+              Activity & Decisions
+            </h1>
+            <p className="text-[14px] text-ink-3 mt-1">
+              Tamper-evident chronological ledger of portfolio recalculations and investor choices.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] text-ink-3 font-mono">
+              {activities.length} Events logged
+            </span>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ── 2-COLUMN DESKTOP GRID ───────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -78,7 +93,7 @@ export function ActivityScreen() {
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <span className="text-[11.5px] font-mono text-ink-3">{act.time}</span>
                           {act.statusBadge && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200">
                               {act.statusBadge}
                             </span>
                           )}
@@ -194,8 +209,8 @@ export function ActivityScreen() {
                             isCompleted
                               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                               : isRetained
-                              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-                              : 'bg-blue-50 text-blue-700 border-blue-200'
+                              ? 'bg-accent-bg text-accent border-accent-border'
+                              : 'bg-amber-50 text-amber-900 border-amber-200'
                           }`}
                         >
                           {dec.status}

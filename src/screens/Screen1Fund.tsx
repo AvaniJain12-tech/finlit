@@ -4,11 +4,12 @@ import { fund, formatINR } from '@/lib/data';
 
 interface Screen1FundProps {
   onRedeem: () => void;
+  onBack?: () => void;
 }
 
-export function Screen1Fund({ onRedeem }: Screen1FundProps) {
+export function Screen1Fund({ onRedeem, onBack }: Screen1FundProps) {
   return (
-    <ScreenShell showHeader brandLabel="FinLit Ventures">
+    <ScreenShell showHeader onBack={onBack} brandLabel="FinLit Ventures">
       <div className="pt-6 animate-fade-in-up">
 
         {/* Fund identity */}

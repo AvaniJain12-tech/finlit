@@ -63,6 +63,7 @@ function AppContent() {
       case 'fund':
         return (
           <Screen1Fund
+            onBack={exitRedemptionFlow}
             onRedeem={() => {
               setFlowScreen('amount');
             }}
@@ -164,7 +165,7 @@ function AppContent() {
         );
 
       default:
-        return <Screen1Fund onRedeem={() => setFlowScreen('amount')} />;
+        return <Screen1Fund onBack={exitRedemptionFlow} onRedeem={() => setFlowScreen('amount')} />;
     }
   };
 

@@ -37,13 +37,13 @@ export function NotificationCenterModal() {
     switch (category) {
       case 'decision':
         return (
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 uppercase tracking-wider">
             Decision
           </span>
         );
       case 'portfolio':
         return (
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wider">
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent-bg text-accent border border-accent-border uppercase tracking-wider">
             Portfolio
           </span>
         );

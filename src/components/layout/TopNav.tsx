@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Bell, ChevronLeft, ShieldCheck, Home, PieChart, Sparkles, Clock } from 'lucide-react';
 import { useFinLit, type Tab } from '@/context/FinLitContext';
 
@@ -21,22 +22,105 @@ export function TopNav({ onBack, title, showBackOnly = false }: TopNavProps) {
     unreadCount,
     openNotificationCenter,
     openSettings,
+    canGoBack,
+    goBack,
   } = useFinLit();
 
+  // Scroll detection:
+  // When past hero section: hides when scrolling down towards bottom, reveals when scrolling upward
+  const [isVisible, setIsVisible] = useState(true);
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateScroll = () => {
+      const currentScrollY = window.scrollY;
+      const heroEl = document.getElementById('page-hero');
+
+      // Calculate hero boundary dynamically
+      let heroThreshold = 180;
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        heroThreshold = Math.max(100, currentScrollY + rect.bottom - 20);
+      }
+
+      const pastHero = currentScrollY > heroThreshold;
+      setIsScrolledPastHero(pastHero);
+
+      if (!pastHero) {
+        // Within or above the hero section: keep visible
+        setIsVisible(true);
+      } else {
+        const delta = currentScrollY - lastScrollY;
+        if (delta > 6) {
+          // Scrolling down towards bottom: hide nav bar smoothly
+          setIsVisible(false);
+        } else if (delta < -6) {
+          // Scrolling back upward: reveal nav bar to user
+          setIsVisible(true);
+        }
+      }
+
+      lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [activeTab]);
+
   return (
-    <header className="sticky top-0 z-30 bg-surface/95 backdrop-blur-md border-b border-border">
+    <header
+      className={`sticky top-0 z-30 bg-surface/95 backdrop-blur-md border-b border-border transition-all duration-300 ease-in-out ${
+        isVisible
+          ? 'translate-y-0 opacity-100'
+          : '-translate-y-full opacity-0 pointer-events-none'
+      } ${isScrolledPastHero ? 'shadow-md border-border/80' : 'shadow-none'}`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between gap-4">
-        {/* Left: Brand or Back Button */}
+        {/* Left: Brand & Go Back Option */}
         <div className="flex items-center gap-3">
           {onBack ? (
             <button
               onClick={onBack}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-border-2 text-ink active:scale-95 transition-all cursor-pointer font-semibold text-[13px]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-border-2 hover:bg-border text-ink active:scale-95 transition-all cursor-pointer font-semibold text-[13px] border border-border"
               aria-label="Go back"
             >
-              <ChevronLeft className="w-5 h-5 text-ink" strokeWidth={2.2} />
-              <span className="hidden sm:inline">Back to Dashboard</span>
+              <ChevronLeft className="w-4 h-4 text-ink" strokeWidth={2.4} />
+              <span>Go Back</span>
             </button>
+          ) : canGoBack ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={goBack}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-border-2 hover:bg-border text-ink active:scale-95 transition-all cursor-pointer font-semibold text-[13px] border border-border shadow-sm group"
+                aria-label="Go back to previous screen"
+                title="Go back to previous screen"
+              >
+                <ChevronLeft className="w-4 h-4 text-ink group-hover:-translate-x-0.5 transition-transform" strokeWidth={2.4} />
+                <span>Go Back</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('home')}
+                className="flex items-center gap-2 text-left cursor-pointer group hidden sm:flex"
+              >
+                <div className="w-7 h-7 rounded-lg bg-ink flex items-center justify-center shadow-btn group-hover:scale-105 transition-transform">
+                  <span className="text-bg text-[12px] font-extrabold tracking-tight">F</span>
+                </div>
+                <span className="text-[14px] font-[750] text-ink tracking-tight">
+                  FinLit
+                </span>
+              </button>
+            </div>
           ) : (
             <button
               onClick={() => setActiveTab('home')}
@@ -99,10 +183,10 @@ export function TopNav({ onBack, title, showBackOnly = false }: TopNavProps) {
         <div className="flex items-center justify-end gap-2.5">
           {!showBackOnly && (
             <>
-              {/* Demo Mode Badge */}
+              {/* Header Portfolio Badge (Replaced "Riya's Portfolio" with clean Consolidated Portfolio) */}
               <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-border-2 text-ink-2 text-[11px] font-semibold border border-border">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>Riya's Portfolio · ₹12.0L</span>
+                <span>Consolidated Portfolio · ₹12.0L</span>
               </div>
 
               {/* Notification Bell */}

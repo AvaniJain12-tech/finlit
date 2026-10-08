@@ -16,9 +16,12 @@ export default {
         'ink-4':     '#D6D3D1',
         'border':    '#E5E2DA',
         'border-2':  '#F0EDE6',
-        // Accent — electric blue used sparingly
-        'accent':    '#315CFF',
-        'accent-bg': '#EEF2FF',
+        // Accent — refined warm tone (terracotta / warm honey amber)
+        'accent':        '#C2672B',
+        'accent-hover':  '#A8531C',
+        'accent-bg':     '#FDF4EB',
+        'accent-light':  '#FFF8F2',
+        'accent-border': '#F6DEC8',
         // Keep slate for compat
         slate: {
           25:  '#fcfcfd',

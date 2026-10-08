@@ -6,7 +6,7 @@ interface ChipProps {
 
 /**
  * Tile-style selectable chip.
- * Selected: accent blue fill — immediately obvious.
+ * Selected: accent warm tone fill — immediately obvious.
  * Unselected: solid white with visible border.
  * Never transparent.
  */

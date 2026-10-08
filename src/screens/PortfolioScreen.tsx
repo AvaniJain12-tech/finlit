@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RefreshCw, ArrowUpRight, AlertCircle, Sparkles, PieChart, Info, ShieldCheck, ArrowRight } from 'lucide-react';
+import { RefreshCw, ArrowUpRight, AlertCircle, Sparkles, PieChart, Info, ShieldCheck, ArrowRight, ChevronLeft } from 'lucide-react';
 import { useFinLit } from '@/context/FinLitContext';
 import { Button } from '@/components/ui/Button';
 import {
@@ -22,6 +22,8 @@ export function PortfolioScreen() {
     hasError,
     clearError,
     triggerSimulatedError,
+    canGoBack,
+    goBack,
   } = useFinLit();
 
   const [showProjectedShift, setShowProjectedShift] = useState(true);
@@ -34,40 +36,53 @@ export function PortfolioScreen() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* ── HEADER ──────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-2">
-        <div>
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <p className="eyebrow">Consolidated Account Statement (CAS)</p>
-          </div>
-          <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
-            Portfolio Overview
-          </h1>
-          <p className="text-[14px] text-ink-3 mt-1">
-            Live holdings, verified NAV records, and deterministic allocation models.
-          </p>
-        </div>
+      {/* ── GO BACK OPTION ────────────────────────────────────────── */}
+      {canGoBack && (
+        <button
+          onClick={goBack}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface border border-border text-[12.5px] font-semibold text-ink-2 hover:text-ink hover:border-ink/20 shadow-sm transition-all group cursor-pointer"
+        >
+          <ChevronLeft className="w-4 h-4 text-ink-3 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Dashboard</span>
+        </button>
+      )}
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={openWhyModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-all cursor-pointer shadow-sm"
-          >
-            <Info className="w-3.5 h-3.5" />
-            <span>Explain data</span>
-          </button>
-          <button
-            onClick={simulateRefresh}
-            disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-all active:scale-95 cursor-pointer shadow-sm disabled:opacity-50"
-            title="Re-sync with exchange"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span>{isRefreshing ? 'Syncing…' : 'Sync Exchange'}</span>
-          </button>
+      {/* ── HERO HEADER (WRAPPED FOR NAVBAR SCROLL WORKFLOW) ──────── */}
+      <section id="page-hero" className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-2">
+          <div>
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <p className="eyebrow">Consolidated Account Statement (CAS)</p>
+            </div>
+            <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
+              Portfolio Overview
+            </h1>
+            <p className="text-[14px] text-ink-3 mt-1">
+              Live holdings, verified NAV records, and deterministic allocation models.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={openWhyModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-all cursor-pointer shadow-sm"
+            >
+              <Info className="w-3.5 h-3.5" />
+              <span>Explain data</span>
+            </button>
+            <button
+              onClick={simulateRefresh}
+              disabled={isRefreshing}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-all active:scale-95 cursor-pointer shadow-sm disabled:opacity-50"
+              title="Re-sync with exchange"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>{isRefreshing ? 'Syncing…' : 'Sync Exchange'}</span>
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ── ERROR RECOVERY STATE DEMO ───────────────────────────── */}
       {hasError ? (
@@ -216,7 +231,7 @@ export function PortfolioScreen() {
                     <tr
                       key={h.id}
                       className={`transition-colors ${
-                        h.isTargetFund ? 'bg-blue-50/20 hover:bg-blue-50/40' : 'hover:bg-[#FAF9F6]'
+                        h.isTargetFund ? 'bg-accent-bg/40 hover:bg-accent-bg/60' : 'hover:bg-[#FAF9F6]'
                       }`}
                     >
                       {/* Fund */}
@@ -224,7 +239,7 @@ export function PortfolioScreen() {
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-ink">{h.name}</span>
                           {h.isTargetFund && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent-bg text-accent border border-accent-border">
                               Active Review
                             </span>
                           )}

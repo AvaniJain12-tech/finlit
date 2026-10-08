@@ -69,6 +69,8 @@ interface FinLitContextType {
   startRedemptionFlow: (initialStep?: FlowScreen) => void;
   exitRedemptionFlow: () => void;
   deepLink: (type: 'receipt' | 'portfolio' | 'goal' | 'insights' | 'activity') => void;
+  canGoBack: boolean;
+  goBack: () => void;
 
   // Notifications
   notifications: NotificationItem[];
@@ -121,8 +123,18 @@ export function FinLitProvider({ children }: { children: ReactNode }) {
   const [purpose, setPurpose] = useState<string | null>(null);
   const [decisionStatus, setDecisionStatus] = useState<DecisionStatus>('review_ready');
 
-  const [activeTab, setActiveTab] = useState<Tab>('home');
+  const [activeTab, setActiveTabState] = useState<Tab>('home');
+  const [tabHistory, setTabHistory] = useState<Tab[]>(['home']);
   const [flowScreen, setFlowScreen] = useState<FlowScreen>(null);
+
+  const setActiveTab = useCallback((newTab: Tab) => {
+    setActiveTabState((prev) => {
+      if (prev !== newTab) {
+        setTabHistory((h) => [...h, prev]);
+      }
+      return newTab;
+    });
+  }, []);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
   const [activities, setActivities] = useState<ActivityEvent[]>(initialActivities);
@@ -234,6 +246,28 @@ export function FinLitProvider({ children }: { children: ReactNode }) {
     window.scrollTo(0, 0);
   }, [showToast]);
 
+  const goBack = useCallback(() => {
+    if (flowScreen !== null) {
+      exitRedemptionFlow();
+      return;
+    }
+    setTabHistory((prevHistory) => {
+      if (prevHistory.length > 0) {
+        const nextHistory = [...prevHistory];
+        const prev = nextHistory.pop();
+        if (prev && prev !== activeTab) {
+          setActiveTabState(prev);
+          return nextHistory;
+        }
+      }
+      setActiveTabState('home');
+      return ['home'];
+    });
+    window.scrollTo(0, 0);
+  }, [flowScreen, activeTab, exitRedemptionFlow]);
+
+  const canGoBack = flowScreen !== null || activeTab !== 'home' || tabHistory.length > 1;
+
   const confirmRedemption = useCallback(() => {
     setDecisionStatus('completed');
     addActivity({
@@ -325,6 +359,8 @@ export function FinLitProvider({ children }: { children: ReactNode }) {
         startRedemptionFlow,
         exitRedemptionFlow,
         deepLink,
+        canGoBack,
+        goBack,
         notifications,
         unreadCount,
         markAsRead,

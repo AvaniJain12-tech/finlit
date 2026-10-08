@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { ChevronLeft } from 'lucide-react';
 
 interface ScreenShellProps {
@@ -18,6 +18,42 @@ export function ScreenShell({
   className = '',
   footer,
 }: ScreenShellProps) {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateScroll = () => {
+      const currentScrollY = window.scrollY;
+      const threshold = 120;
+      const pastTop = currentScrollY > threshold;
+
+      if (!pastTop) {
+        setIsVisible(true);
+      } else {
+        const delta = currentScrollY - lastScrollY;
+        if (delta > 6) {
+          setIsVisible(false);
+        } else if (delta < -6) {
+          setIsVisible(true);
+        }
+      }
+      lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-start py-2 sm:py-8 px-2 sm:px-4">
       <div
@@ -27,7 +63,13 @@ export function ScreenShell({
         `}
       >
         {showHeader && (
-          <header className="sticky top-0 z-20 bg-surface/95 backdrop-blur-sm border-b border-border">
+          <header
+            className={`sticky top-0 z-20 bg-surface/95 backdrop-blur-sm border-b border-border transition-all duration-300 ease-in-out ${
+              isVisible
+                ? 'translate-y-0 opacity-100'
+                : '-translate-y-full opacity-0 pointer-events-none'
+            }`}
+          >
             <div className="px-6 h-[56px] flex items-center justify-between">
               {/* Left: back button */}
               <div className="flex items-center">

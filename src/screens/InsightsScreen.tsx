@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Target, Sparkles, Info, ShieldCheck, ArrowRight, BarChart2, TrendingDown, Layers } from 'lucide-react';
+import { Target, Sparkles, Info, ShieldCheck, ArrowRight, BarChart2, TrendingDown, Layers, ChevronLeft } from 'lucide-react';
 import { useFinLit } from '@/context/FinLitContext';
 import { Button } from '@/components/ui/Button';
 import {
@@ -19,33 +19,48 @@ export function InsightsScreen() {
     openAiExplanation,
     openWhyModal,
     startRedemptionFlow,
+    canGoBack,
+    goBack,
   } = useFinLit();
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* ── HEADER ──────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-2">
-        <div>
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="w-2 h-2 rounded-full bg-accent" />
-            <p className="eyebrow">Explainable Intelligence Layer</p>
-          </div>
-          <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
-            Insights & Goals
-          </h1>
-          <p className="text-[14px] text-ink-3 mt-1">
-            Deterministic arithmetic and behavioral guardrails behind your capital allocation.
-          </p>
-        </div>
-
+      {/* ── GO BACK OPTION ────────────────────────────────────────── */}
+      {canGoBack && (
         <button
-          onClick={openWhyModal}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-all cursor-pointer shadow-sm"
+          onClick={goBack}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface border border-border text-[12.5px] font-semibold text-ink-2 hover:text-ink hover:border-ink/20 shadow-sm transition-all group cursor-pointer"
         >
-          <Info className="w-3.5 h-3.5" />
-          <span>Explain data sources</span>
+          <ChevronLeft className="w-4 h-4 text-ink-3 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Back to Dashboard</span>
         </button>
-      </div>
+      )}
+
+      {/* ── HEADER (WRAPPED FOR NAVBAR SCROLL BEHAVIOR) ───────────── */}
+      <section id="page-hero" className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-2">
+          <div>
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <p className="eyebrow text-accent">Explainable Intelligence Layer</p>
+            </div>
+            <h1 className="text-[28px] sm:text-[34px] font-[800] text-ink leading-tight tracking-tight">
+              Insights & Goals
+            </h1>
+            <p className="text-[14px] text-ink-3 mt-1">
+              Deterministic arithmetic and behavioral guardrails behind your capital allocation.
+            </p>
+          </div>
+
+          <button
+            onClick={openWhyModal}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-ink-2 hover:text-ink text-[12px] font-semibold transition-all cursor-pointer shadow-sm"
+          >
+            <Info className="w-3.5 h-3.5" />
+            <span>Explain data sources</span>
+          </button>
+        </div>
+      </section>
 
       {/* ── 2-COLUMN DESKTOP GRID ───────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -70,7 +85,7 @@ export function InsightsScreen() {
                   key={g.id}
                   className={`rounded-2xl border p-6 shadow-card transition-all ${
                     isTargetGoal
-                      ? 'bg-surface border-ink/30 ring-1 ring-ink/10'
+                      ? 'bg-surface border-accent/40 ring-1 ring-accent/20'
                       : 'bg-surface border-border'
                   }`}
                 >
@@ -81,7 +96,7 @@ export function InsightsScreen() {
                           {g.name} — {g.year}
                         </h3>
                         {isTargetGoal && (
-                          <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                          <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-accent-bg text-accent border border-accent-border">
                             Impacted
                           </span>
                         )}
