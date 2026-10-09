@@ -4,6 +4,7 @@ import { useFinLit } from '@/context/FinLitContext';
 import { Button } from '@/components/ui/Button';
 import {
   fund,
+  portfolio,
   goal,
   goalAfter,
   goalsList,

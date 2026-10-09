@@ -14,12 +14,14 @@ import { Screen6NeedCash } from '@/screens/Screen6NeedCash';
 import { Screen7Explainability } from '@/screens/Screen7Explainability';
 import { Screen8Completion } from '@/screens/Screen8Completion';
 import { Toast } from '@/components/ui/Toast';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { AIExplanationModal } from '@/components/modals/AIExplanationModal';
 import { WhyAmISeeingModal } from '@/components/modals/WhyAmISeeingModal';
 
 function AppContent() {
   const {
     activeTab,
+    setActiveTab,
     flowScreen,
     setFlowScreen,
     amount,
@@ -49,10 +51,12 @@ function AppContent() {
   if (flowScreen === null) {
     return (
       <AppShell showBottomNav={true}>
-        {activeTab === 'home' && <HomeScreen />}
-        {activeTab === 'portfolio' && <PortfolioScreen />}
-        {activeTab === 'insights' && <InsightsScreen />}
-        {activeTab === 'activity' && <ActivityScreen />}
+        <ErrorBoundary onReset={() => setActiveTab('home')}>
+          {activeTab === 'home' && <HomeScreen />}
+          {activeTab === 'portfolio' && <PortfolioScreen />}
+          {activeTab === 'insights' && <InsightsScreen />}
+          {activeTab === 'activity' && <ActivityScreen />}
+        </ErrorBoundary>
       </AppShell>
     );
   }
